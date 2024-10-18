@@ -7,7 +7,7 @@ import { Billboard, Text } from '@pmndrs/vanilla';
 import { MeshTransmissionMaterial } from './MeshTransmissionMaterial';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 import { loadDNAModel } from './dna';
-import Float from './float';
+import Float from './Float';
 import { cameraRig } from './camreaRig';
 import { cameraAnimation,cameraTarget, isScrolling } from './cameraAnimation';
 import { initEffect } from './effect';
