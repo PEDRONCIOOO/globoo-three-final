@@ -6,12 +6,58 @@ import { EffectComposer, RenderPass } from 'postprocessing';
 import { Billboard, Text } from '@pmndrs/vanilla';
 import { MeshTransmissionMaterial } from './MeshTransmissionMaterial';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
-import { loadDNAModel } from './dna';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import Float from './Float';
 import { cameraRig } from './camreaRig';
 import { cameraAnimation,cameraTarget, isScrolling } from './cameraAnimation';
 import { initEffect } from './effect';
 import { createParticles } from './particles';
+
+// Add loading manager like in dna.js
+const manager = new THREE.LoadingManager();
+manager.onLoad = () => {
+    setTimeout(() => {
+        const loaderContainer = document.querySelector(".loader-container");
+        if (loaderContainer) {
+            loaderContainer.classList.add("loaded");
+        }
+    }, 200);
+}
+
+function loadPillModel() {
+    return new Promise((resolve, reject) => {
+        const gltfLoader = new GLTFLoader(manager); // Use the manager here
+        const modelUrl = "/G-3D.glb";
+        
+        gltfLoader.load(modelUrl, (gltf) => {
+            const pillModel = gltf.scene;
+            // Scale and position the model as needed
+            pillModel.scale.set(15, 15, 15); // Adjust scale as needed
+            pillModel.position.set(-2.2, -2, 0); // Adjust position as needed
+            
+            // Apply the transmission material to all meshes in the model
+            pillModel.traverse((child) => {
+                if (child instanceof THREE.Mesh) {
+                    child.material = Object.assign(new MeshTransmissionMaterial(10), {
+                        clearcoat: 1,
+                        clearcoatRoughness: 0,
+                        transmission: 0.95,
+                        chromaticAberration: 0.03,
+                        anisotrophicBlur: 0.1,
+                        roughness: 0.05,
+                        thickness: 1.2,
+                        ior: 1.35,
+                        distortion: 0.1,
+                        distortionScale: 0.2,
+                        temporalDistortion: 0.2
+                    });
+                }
+            });
+            
+            resolve(pillModel);
+        }, undefined, reject);
+    });
+}
 
 function initScene() {
     console.log('initScene');
@@ -21,7 +67,7 @@ function initScene() {
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#cee7ff')
-    const envMapUrl = '/royal_esplanade_1k.hdr' // 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/equirectangular/royal_esplanade_1k.hdr'
+    const envMapUrl = '/royal_esplanade_1k.hdr'
     new RGBELoader().load(envMapUrl, (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.environment = texture;
@@ -63,41 +109,41 @@ function initScene() {
     // effect
     initEffect(composer, camera)
 
-    // capsule
-    const capsule = new THREE.Mesh(
-        new THREE.CapsuleGeometry(0.9, 2.5, 4, 32),
-    )
-    capsule.material = Object.assign(new MeshTransmissionMaterial(10), {
-        clearcoat: 1,
-        clearcoatRoughness: 0,
-        transmission: 0.95,
-        chromaticAberration: 0.03,
-        anisotrophicBlur: 0.1,
-        // Set to > 0 for diffuse roughness
-        roughness: 0.05,
-        thickness: 1.2,
-        ior: 1.35,
-        // Set to > 0 for animation
-        distortion: 0.1,
-        distortionScale: 0.2,
-        temporalDistortion: 0.2
-    })
-    // dna
-    let dna = new THREE.Group();
-    loadDNAModel().then((model) => {
-        console.log('dna', model);
-        dna.add(model);
-        dna.scale.set(0.105, 0.105, 0.105)
-        dna.position.set(0, -1.7, 0.0)
-    })
-    const floatCapusle = new Float({
-        floatIntensity: 4,
-        rotationIntensity: 4
+    // Main model (your GLB model)
+    let mainModel = new THREE.Group();
+    
+    // Load the GLB model as the main object
+    loadPillModel().then((pillModel) => {
+        console.log('main model loaded', pillModel);
+        mainModel.add(pillModel);
+    }).catch((error) => {
+        console.error('Error loading main model:', error);
+        // Fallback to original capsule if model fails to load
+        const fallbackCapsule = new THREE.Mesh(
+            new THREE.CapsuleGeometry(0.9, 2.5, 4, 32),
+            Object.assign(new MeshTransmissionMaterial(10), {
+                clearcoat: 1,
+                clearcoatRoughness: 0,
+                transmission: 0.95,
+                chromaticAberration: 0.03,
+                anisotrophicBlur: 0.1,
+                roughness: 0.05,
+                thickness: 1.2,
+                ior: 1.35,
+                distortion: 0.1,
+                distortionScale: 0.2,
+                temporalDistortion: 0.2
+            })
+        );
+        mainModel.add(fallbackCapsule);
     });
-    floatCapusle.position.set(0, 0.1, 0);
-    floatCapusle.rotation.set(0, 0, Math.PI / 3);
-    floatCapusle.add(capsule, dna);
-    scene.add(floatCapusle);
+
+    const floatMainModel = new Float({
+        floatIntensity: 4,
+    });
+    floatMainModel.position.set(0, 0.1, 0);
+    floatMainModel.add(mainModel); // Only add the main model now
+    scene.add(floatMainModel);
 
     // character
     const billBoard = Billboard({lockX: true});
@@ -107,7 +153,7 @@ function initScene() {
         color: 0x87a8c3,
         fillOpacity: 0.1,
         letterSpacing: -0.05,
-        text: "HEALTHY",
+        text: "GLOBOO",
     })
     text.mesh.position.set(0, 0, -2)
     billBoard.group.add(text.mesh);
@@ -124,20 +170,24 @@ function initScene() {
     const render = (t) => {
         delta = clock.getDelta();
 
-        dna.rotation.y += delta;
-        dna.rotation.y %= Math.PI * 2;
+        // Remove DNA rotation code
+        // Add rotation to your main model if desired
 
-        // capsule.material.time = t / 1000;
+        // Animate the transmission material of your GLB model
+        mainModel.traverse((child) => {
+            if (child instanceof THREE.Mesh && child.material && child.material.time !== undefined) {
+                child.material.time = t / 1000;
+            }
+        });
+
         billBoard.update(camera);
-        floatCapusle.update();
+        floatMainModel.update(); // Updated variable name
         particles.update();
 
         isScrolling && camera.lookAt(cameraTarget);
         !isScrolling && updateCameraRig(delta);
         
-        // renderer.render(scene, camera);
         composer.render();
-
         requestAnimationFrame(render);
     }
 
