@@ -35,25 +35,6 @@ function loadPillModel() {
             pillModel.scale.set(15, 15, 15); // Adjust scale as needed
             pillModel.position.set(-2.2, -2, 0); // Adjust position as needed
             
-            // Apply the transmission material to all meshes in the model
-            pillModel.traverse((child) => {
-                if (child instanceof THREE.Mesh) {
-                    child.material = Object.assign(new MeshTransmissionMaterial(10), {
-                        clearcoat: 1,
-                        clearcoatRoughness: 0,
-                        transmission: 0.95,
-                        chromaticAberration: 0.03,
-                        anisotrophicBlur: 0.1,
-                        roughness: 0.05,
-                        thickness: 1.2,
-                        ior: 1.35,
-                        distortion: 0.1,
-                        distortionScale: 0.2,
-                        temporalDistortion: 0.2
-                    });
-                }
-            });
-            
             resolve(pillModel);
         }, undefined, reject);
     });
@@ -66,7 +47,7 @@ function initScene() {
     initSizes(canvas);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#cee7ff')
+    scene.background = new THREE.Color('#000')
     const envMapUrl = '/royal_esplanade_1k.hdr'
     new RGBELoader().load(envMapUrl, (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
@@ -84,10 +65,17 @@ function initScene() {
     controls.enabled = false;
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-    // scene.add(ambientLight);
-    const light = new THREE.DirectionalLight(0x0000ff, 1);
-    light.position.set(0, 2, 4);
+    scene.add(ambientLight);
+    
+    // Replace or modify the existing blue light
+    const light = new THREE.DirectionalLight(0x00ffff, 1); // Cyan directional light
+    light.position.set(0, 2, 2);
     scene.add(light);
+    
+    const cyanLight2 = new THREE.PointLight(0x00ffff, 1.5, 8); // Another cyan point light
+    cyanLight2.position.set(-1, -1, 1);
+    scene.add(cyanLight2);
+    
 
     const renderer = new THREE.WebGLRenderer({
         canvas,
@@ -118,21 +106,13 @@ function initScene() {
         mainModel.add(pillModel);
     }).catch((error) => {
         console.error('Error loading main model:', error);
-        // Fallback to original capsule if model fails to load
+        // Fallback to original capsule with basic material
         const fallbackCapsule = new THREE.Mesh(
             new THREE.CapsuleGeometry(0.9, 2.5, 4, 32),
-            Object.assign(new MeshTransmissionMaterial(10), {
-                clearcoat: 1,
-                clearcoatRoughness: 0,
-                transmission: 0.95,
-                chromaticAberration: 0.03,
-                anisotrophicBlur: 0.1,
-                roughness: 0.05,
-                thickness: 1.2,
-                ior: 1.35,
-                distortion: 0.1,
-                distortionScale: 0.2,
-                temporalDistortion: 0.2
+            new THREE.MeshStandardMaterial({ 
+                color: 0x87a8c3,
+                roughness: 0.1,
+                metalness: 0.8
             })
         );
         mainModel.add(fallbackCapsule);
@@ -142,25 +122,19 @@ function initScene() {
         floatIntensity: 4,
     });
     floatMainModel.position.set(0, 0.1, 0);
-    floatMainModel.add(mainModel); // Only add the main model now
+    floatMainModel.add(mainModel); 
     scene.add(floatMainModel);
 
     // character
     const billBoard = Billboard({lockX: true});
-    const text = Text({
-        font:"BigShouldersDisplay-Light.ttf",
-        fontSize: 10,
-        color: 0x87a8c3,
-        fillOpacity: 0.1,
-        letterSpacing: -0.05,
-        text: "GLOBOO",
-    })
-    text.mesh.position.set(0, 0, -2)
-    billBoard.group.add(text.mesh);
     scene.add(billBoard.group);
 
     // particles
-    const particles = createParticles({ particlesCount: 100 });
+    const particles = createParticles({ 
+        particlesCount: 1000,
+        size: 30,
+        scale: 1
+    });
     scene.add(particles.group);
 
     initResizeEventListener([camera], [renderer, composer]);
@@ -170,18 +144,8 @@ function initScene() {
     const render = (t) => {
         delta = clock.getDelta();
 
-        // Remove DNA rotation code
-        // Add rotation to your main model if desired
-
-        // Animate the transmission material of your GLB model
-        mainModel.traverse((child) => {
-            if (child instanceof THREE.Mesh && child.material && child.material.time !== undefined) {
-                child.material.time = t / 1000;
-            }
-        });
-
         billBoard.update(camera);
-        floatMainModel.update(); // Updated variable name
+        floatMainModel.update();
         particles.update();
 
         isScrolling && camera.lookAt(cameraTarget);

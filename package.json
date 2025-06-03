@@ -1,5 +1,5 @@
 {
-  "name": "mancini-liquid-pill",
+  "name": "globoo-three-final",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview"
   },
+  "author": "Pedro Trotta",
   "devDependencies": {
     "vite": "^5.3.4"
   },

@@ -29,7 +29,7 @@ header {
   align-items: center;
   gap: 6px;
   letter-spacing: -1px;
-  color: #3b6275;
+  color: cyan;
   font-size: 1.4em;
 }
 
@@ -37,7 +37,7 @@ header ul {
   list-style: none;
   display: flex;
   gap: 30px;
-  color: #3b6275;
+  color: white;
   font-weight: 400;
   font-size: 1em;
   text-transform: uppercase;
@@ -46,13 +46,11 @@ header ul {
 header ul li {
   cursor: pointer;
   padding: 6px 15px;
-  border-radius: 50px;
   border: 1px solid transparent;
 }
 
 header ul li:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid rgba(26, 182, 243, 0.973);
 }
 
 button {
@@ -105,7 +103,7 @@ strong {
   line-height: 0.9em;
   padding: 0;
   margin-bottom: 20px;
-  color: rgba(60, 147, 184, 0.9);
+  color: white;
 }
 
 .wrapper p,
@@ -114,7 +112,7 @@ strong {
   font-family: 'Roboto Flex', sans-serif;
   font-weight: 300;
   line-height: 1.6em;
-  color: #29424e;
+  color: #195875;
 }
 
 /* SECTION 2 */
