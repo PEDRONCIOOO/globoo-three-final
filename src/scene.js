@@ -47,7 +47,7 @@ function initScene() {
     initSizes(canvas);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#000')
+    scene.background = new THREE.Color('#307275')
     const envMapUrl = '/royal_esplanade_1k.hdr'
     new RGBELoader().load(envMapUrl, (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;

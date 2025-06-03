@@ -15,11 +15,10 @@ window.addEventListener("scroll", function() {
     }
 });
 
-
-
 function cameraAnimation(camera = new PerspectiveCamera()) {
     const tl = gsap.timeline();
 
+    // Section 1 to Section 2 transition
     tl.fromTo(
         camera.position,
         { x: 0, y: -0.1, z: 6 },
@@ -36,6 +35,7 @@ function cameraAnimation(camera = new PerspectiveCamera()) {
             },
         }
     );
+    
     tl.fromTo(
         cameraTarget,
         {
@@ -57,6 +57,7 @@ function cameraAnimation(camera = new PerspectiveCamera()) {
         },
         "<"
     )
+    // Fade out section-1 when entering section-2
     .to(
         ".section-1 .wrapper",
         {
@@ -70,6 +71,8 @@ function cameraAnimation(camera = new PerspectiveCamera()) {
         },
         "<"
     )
+    
+    // Section 2 to Section 3 transition
     .fromTo(
         camera.position,
         { x: 2.56, y: -1.01, z: 2 },
@@ -95,12 +98,92 @@ function cameraAnimation(camera = new PerspectiveCamera()) {
             y: 0,
             z: 0,
             ease: "power2.inOut",
-
             immediateRender: false,
             scrollTrigger: {
                 trigger: ".section-3",
                 start: "top bottom",
                 end: "bottom bottom",
+                scrub: 0.5,
+            },
+        }
+    )
+    // Fade out section-2 when entering section-3
+    .to(
+        ".section-2",
+        {
+            opacity: 0.3,
+            scrollTrigger: {
+                trigger: ".section-3",
+                start: "top 80%",
+                end: "top 60%",
+                scrub: 0.5,
+            },
+        }
+    )
+    
+    // Section 3 to Section 4 transition
+    .fromTo(
+        camera.position,
+        { x: 0, y: -1.01, z: 5 },
+        {
+            x: 0.5,
+            y: 0.5,
+            z: 8,
+            ease: "power2.inOut",
+            immediateRender: false,
+            scrollTrigger: {
+                trigger: ".section-4",
+                start: "top bottom",
+                end: "bottom bottom",
+                scrub: 0.5,
+            },
+        }
+    )
+    .fromTo(
+        cameraTarget,
+        { x: 4, y: 0, z: 0 },
+        {
+            x: -3.5,
+            y: 0.2,
+            z: 0,
+            ease: "power2.inOut",
+            immediateRender: false,
+            scrollTrigger: {
+                trigger: ".section-4",
+                start: "top bottom",
+                end: "bottom bottom",
+                scrub: 0.5,
+            },
+        }
+    )
+    // Fade out section-3 when entering section-4
+    .to(
+        ".section-3",
+        {
+            opacity: 0.3,
+            scrollTrigger: {
+                trigger: ".section-4",
+                start: "top 80%",
+                end: "top 60%",
+                scrub: 0.5,
+            },
+        }
+    )
+    // Animate section-4 content in
+    .fromTo(
+        ".section-4 .wrapper",
+        {
+            opacity: 0,
+            y: 50,
+        },
+        {
+            opacity: 1,
+            y: 0,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: ".section-4",
+                start: "top 70%",
+                end: "top 50%",
                 scrub: 0.5,
             },
         }
