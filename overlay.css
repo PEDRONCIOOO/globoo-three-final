@@ -67,7 +67,7 @@ button {
 }
 
 button:hover {
-  background-color: #3b6275;
+  background-color: #4290c8;
   color: white;
 }
 
@@ -115,6 +115,12 @@ strong {
   color: #298ebd;
 }
 
+.wrapper span{
+  color: gray;
+  position: relative;
+  top: 3em;
+}
+
 .download-wrapper{
   display: flex;
   align-items: center;
@@ -122,7 +128,9 @@ strong {
 }
 
 .apple img, .android img{
-  width: 200px;
+  width: 150px;
+  cursor: pointer;
+  z-index: 10;
 }
 
 /* SECTION 2 */
