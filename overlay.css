@@ -112,7 +112,17 @@ strong {
   font-family: 'Roboto Flex', sans-serif;
   font-weight: 300;
   line-height: 1.6em;
-  color: #195875;
+  color: #298ebd;
+}
+
+.download-wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apple img, .android img{
+  width: 200px;
 }
 
 /* SECTION 2 */
@@ -135,7 +145,7 @@ strong {
   line-height: 0.9em;
   padding: 0;
   margin-bottom: 20px;
-  color: rgba(60, 147, 184, 0.9);
+  color: white;
 }
 
 .section-2 .wrapper ul {
@@ -143,6 +153,10 @@ strong {
   line-height: 1.6em;
   padding: 20px 20px;
   font-family: 'Roboto Flex', sans-serif;
+}
+
+.section-2 .wrapper ul li{
+  color: white;
 }
 
 /* SECTION 3 */
@@ -167,7 +181,7 @@ strong {
   line-height: 0.9em;
   padding: 0;
   margin-bottom: 20px;
-  color: rgba(60, 147, 184, 0.9);
+  color: white;
 }
 
 .card-wrapper {
@@ -193,7 +207,7 @@ strong {
 }
 
 .card p {
-  color: #236f92;
+  color: #298ebd;
 }
 
 /* FOOTER */
