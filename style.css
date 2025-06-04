@@ -10,6 +10,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  cursor: none;
 }
 
 #webgl-container {
@@ -75,4 +76,58 @@ body {
 
 .toma{
   color: #307275;
+}
+
+.cursor {
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(45deg, #4290c8, #298ebd);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  mix-blend-mode: difference;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  box-shadow: 0 0 10px rgba(66, 144, 200, 0.5);
+}
+
+.cursor-follower {
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba(66, 144, 200, 0.3);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+.cursor.cursor-hover {
+  transform: scale(1.5);
+  background: linear-gradient(45deg, #5ba3d1, #4290c8);
+  box-shadow: 0 0 20px rgba(66, 144, 200, 0.8);
+}
+
+.cursor-follower.cursor-hover {
+  transform: scale(1.5);
+  border-color: rgba(66, 144, 200, 0.6);
+  border-width: 3px;
+}
+
+.cursor.cursor-click {
+  transform: scale(0.8);
+  background: linear-gradient(45deg, #298ebd, #1a7aa8);
+}
+
+/* Hide cursor on mobile */
+@media (hover: none) and (pointer: coarse) {
+  .cursor,
+  .cursor-follower {
+    display: none;
+  }
+  
+  body {
+    cursor: auto;
+  }
 }
