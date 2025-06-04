@@ -15,6 +15,7 @@
   "dependencies": {
     "@pmndrs/vanilla": "^1.19.3",
     "gsap": "^3.12.5",
+    "lottie-web": "^5.13.0",
     "maath": "^0.10.8",
     "noisejs": "^2.1.0",
     "postprocessing": "^6.36.3",

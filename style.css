@@ -131,3 +131,24 @@ body {
     cursor: auto;
   }
 }
+
+.threejs-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#cofre-canvas {
+  width: 400px !important;
+  height: 400px !important;
+  filter: drop-shadow(0 0 30px rgba(66, 144, 200, 0.3));
+  border-radius: 15px;
+}
+
+@media only screen and (max-width: 1200px) {
+  #cofre-canvas {
+    width: 300px !important;
+    height: 300px !important;
+  }
+}

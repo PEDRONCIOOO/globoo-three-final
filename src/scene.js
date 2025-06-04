@@ -52,7 +52,7 @@ function initScene() {
     new RGBELoader().load(envMapUrl, (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.environment = texture;
-        scene.environmentIntensity = 1;
+        scene.environmentIntensity = 0.5;
         // scene.background = texture;
     })
 
