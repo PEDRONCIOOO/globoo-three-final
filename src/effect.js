@@ -8,8 +8,8 @@ function initEffect(composer, camera) {
     // bloom
     const bloomEffect = new BloomEffect({
         mipmapBlur: true,
-        intensity: 0.9,
-        levels: 9,
+        intensity: 0.1,
+        levels: 1,
         luminanceSmoothing: 0.1,
         luminanceThreshold: 0.7
     })
@@ -32,8 +32,8 @@ function initEffect(composer, camera) {
     composer.addPass(hueSaturationPass);
     // vignette
     const vignetteEffect = new VignetteEffect({
-        offset: 0.45,
-        darkness: 0.45
+        offset: 0.25,
+        darkness: 0.25
     })
     const vignettePass = new EffectPass(camera, vignetteEffect);
     composer.addPass(vignettePass);
