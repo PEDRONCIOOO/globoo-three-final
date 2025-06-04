@@ -52,7 +52,7 @@ function initScene() {
     new RGBELoader().load(envMapUrl, (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.environment = texture;
-        scene.environmentIntensity = 2;
+        scene.environmentIntensity = 1;
         // scene.background = texture;
     })
 
@@ -106,7 +106,6 @@ function initScene() {
         mainModel.add(pillModel);
     }).catch((error) => {
         console.error('Error loading main model:', error);
-        // Fallback to original capsule with basic material
         const fallbackCapsule = new THREE.Mesh(
             new THREE.CapsuleGeometry(0.9, 2.5, 4, 32),
             new THREE.MeshStandardMaterial({ 

@@ -126,9 +126,9 @@ function cameraAnimation(camera = new PerspectiveCamera()) {
         camera.position,
         { x: 0, y: -1.01, z: 5 },
         {
-            x: 0.5,
+            x: -3,
             y: 0.5,
-            z: 8,
+            z: 4,
             ease: "power2.inOut",
             immediateRender: false,
             scrollTrigger: {
@@ -143,8 +143,8 @@ function cameraAnimation(camera = new PerspectiveCamera()) {
         cameraTarget,
         { x: 4, y: 0, z: 0 },
         {
-            x: -3.5,
-            y: 0.2,
+            x: 13,
+            y: 0.5,
             z: 0,
             ease: "power2.inOut",
             immediateRender: false,
