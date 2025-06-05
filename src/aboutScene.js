@@ -15,7 +15,7 @@ let isScrolling = false;
 let cameraTarget = new THREE.Vector3(0, 0, 0);
 let mixer; // Animation mixer for Blender animations
 let actions = []; // Store animation actions
-let isAnimationPlayed = false; // Track if animation has been played
+let animationState = 'closed'; // Track animation state: 'closed', 'opening', 'open', 'closing'
 let cofreModel; // Store cofre model for click detection
 let raycaster, mouse; // For click detection
 
@@ -28,34 +28,27 @@ function loadCriptoModel() {
             (gltf) => {
                 const model = gltf.scene;
                 model.scale.setScalar(1.2);
+                model.position.set(-1, 0, -2)
                 
                 // Store model reference for click detection
                 cofreModel = model;
                 
-                // Check for animations but DON'T play them yet
+                // Check for animations
                 if (gltf.animations && gltf.animations.length > 0) {
-                    console.log('Found animations:', gltf.animations.length);
-                    
                     // Create animation mixer
                     mixer = new THREE.AnimationMixer(model);
                     
-                    // Setup animations but don't play them
-                    gltf.animations.forEach((clip, index) => {
-                        console.log(`Animation ${index}:`, clip.name, 'Duration:', clip.duration);
-                        
+                    // Setup animations
+                    gltf.animations.forEach((clip) => {
                         const action = mixer.clipAction(clip);
                         
-                        // Animation settings - play only once
-                        action.setLoop(THREE.LoopOnce); // Play only once
-                        action.clampWhenFinished = true; // Stay at final frame
+                        // Animation settings for reversible animation
+                        action.setLoop(THREE.LoopOnce);
+                        action.clampWhenFinished = true;
                         action.enable = true;
                         
                         actions.push(action);
                     });
-                    
-                    console.log('Animations prepared (not started yet)');
-                } else {
-                    console.log('No animations found in the GLB model');
                 }
                 
                 // Enhance materials
@@ -73,30 +66,100 @@ function loadCriptoModel() {
                 
                 resolve(model);
             },
-            (progress) => {
-                console.log('Loading progress:', (progress.loaded / progress.total * 100) + '%');
-            },
+            undefined,
             reject
         );
     });
 }
 
-// Function to play animation once
-function playCofreAnimation() {
-    if (!isAnimationPlayed && actions.length > 0) {
-        console.log('Playing cofre animation...');
-        
+// Function to play animation forward or backward with proper sequencing
+function toggleCofreAnimation() {
+    if (actions.length === 0) return;
+    
+    if (animationState === 'closed') {
+        // Play animation forward (open the cofre)
+        animationState = 'opening';
         actions.forEach(action => {
-            action.reset(); // Reset to beginning
-            action.play(); // Start animation
+            action.reset();
+            action.timeScale = 1; // Normal speed
+            action.play();
         });
         
-        isAnimationPlayed = true;
+        // Set state to 'open' when animation finishes
+        setTimeout(() => {
+            if (animationState === 'opening') {
+                animationState = 'open';
+            }
+        }, getMaxAnimationDuration() * 1000);
         
-        // Optional: Add visual feedback
-    } else if (isAnimationPlayed) {
-        console.log('Animation already played!');
+    } else if (animationState === 'open') {
+        // Play animation backward with PROPER SEQUENCING
+        animationState = 'closing';
+        
+        // First: Play coin animations (make coins go inside)
+        const coinAnimations = actions.filter(action => {
+            const name = action.getClip().name.toLowerCase();
+            return name.includes('bitcoin') || 
+                   name.includes('etherium') || 
+                   name.includes('curve') ||
+                   name.includes('coin');
+        });
+        
+        // Second: Play door animations (after coins are inside)
+        const doorAnimations = actions.filter(action => {
+            const name = action.getClip().name.toLowerCase();
+            return name.includes('door') || 
+                   name.includes('manivela') ||
+                   name.includes('handle');
+        });
+        
+        console.log('Coin animations:', coinAnimations.length);
+        console.log('Door animations:', doorAnimations.length);
+        
+        // Start coin animations first
+        coinAnimations.forEach(action => {
+            action.timeScale = -1; // Reverse speed
+            action.paused = false;
+            action.play();
+        });
+        
+        // Start door animations after a delay (let coins go in first)
+        const coinDuration = Math.max(...coinAnimations.map(action => action.getClip().duration));
+        setTimeout(() => {
+            doorAnimations.forEach(action => {
+                action.timeScale = -1; // Reverse speed
+                action.paused = false;
+                action.play();
+            });
+        }, coinDuration * 800); // Start door closing when coins are 80% done
+        
+        // Set state to 'closed' when all animations finish
+        setTimeout(() => {
+            if (animationState === 'closing') {
+                animationState = 'closed';
+            }
+        }, getMaxAnimationDuration() * 1000);
     }
+    
+    // Visual feedback - NO FLASH, just scale effect
+    if (cofreModel) {
+        // Subtle scale pulse instead of color flash
+        const originalScale = mainModel.scale.clone();
+        const pulseScale = originalScale.clone().multiplyScalar(1.02); // 2% bigger
+        
+        mainModel.scale.copy(pulseScale);
+        
+        // Scale back to normal
+        setTimeout(() => {
+            mainModel.scale.copy(originalScale);
+        }, 200);
+    }
+}
+
+// Helper function to get the longest animation duration
+function getMaxAnimationDuration() {
+    if (actions.length === 0) return 1;
+    return Math.max(...actions.map(action => action.getClip().duration));
 }
 
 // Hide loader function
@@ -115,8 +178,6 @@ export function initAboutScene() {
     const canvas = document.querySelector('#webgl');
     const container = document.querySelector('#webgl-container');
 
-    console.log('Criptomoedas scene initialization started...');
-
     // Setup raycaster for click detection
     raycaster = new THREE.Raycaster();
     mouse = new THREE.Vector2();
@@ -132,7 +193,7 @@ export function initAboutScene() {
         0.1,
         1000
     );
-    camera.position.set(10, 3, 8);
+    camera.position.set(7, -2, -3);
 
     // Renderer setup
     renderer = new THREE.WebGLRenderer({
@@ -149,8 +210,8 @@ export function initAboutScene() {
     controls = new OrbitControls(camera, canvas);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.4;
+    controls.autoRotate = false;
+    controls.autoRotateSpeed = 0;
     controls.enableZoom = false;
     controls.enablePan = false;
     controls.maxPolarAngle = Math.PI / 2;
@@ -174,6 +235,7 @@ export function initAboutScene() {
     pointLight2.position.set(10, -5, 10);
     scene.add(pointLight2);
 
+    // Post-processing
     composer = new EffectComposer(renderer);
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
@@ -195,12 +257,6 @@ export function initAboutScene() {
     // Load the crypto safe model
     loadCriptoModel().then((criptoModel) => {
         mainModel.add(criptoModel);
-        
-        // DEBUG: Add bounding box helper to visualize clickable area
-        const box = new THREE.Box3().setFromObject(cofreModel);
-        const helper = new THREE.Box3Helper(box, 0xff0000);
-        scene.add(helper);
-        
         hideLoader();
     }).catch((error) => {
         console.error('Error loading crypto model:', error);
@@ -215,7 +271,7 @@ export function initAboutScene() {
         const fallbackMesh = new THREE.Mesh(fallbackGeometry, fallbackMaterial);
         fallbackMesh.castShadow = true;
         mainModel.add(fallbackMesh);
-        cofreModel = fallbackMesh; // Set fallback as clickable
+        cofreModel = fallbackMesh;
         hideLoader();
     });
 
@@ -236,34 +292,28 @@ export function initAboutScene() {
     });
     scene.add(particles.group);
 
-    // Click event listener with debugging
+    // Click event listener
     canvas.addEventListener('click', (event) => {
-        
-        // Calculate mouse position in normalized device coordinates
         const rect = canvas.getBoundingClientRect();
         mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
         
-        // Cast ray from camera through mouse position
         raycaster.setFromCamera(mouse, camera);
         
-        // Check for intersections with the cofre
-            if (cofreModel) {
+        if (cofreModel) {
             const intersects = raycaster.intersectObject(cofreModel, true);
             if (intersects.length > 0) {
-                console.log('Cofre clicked! Intersection details:', intersects[0]);
-                playCofreAnimation();
-                
-                // Change cursor temporarily
-                canvas.style.cursor = 'pointer';
-                setTimeout(() => {
-                    canvas.style.cursor = 'grab';
-                }, 1000);
-            } else {
-                console.log('No intersections with cofre');
+                // Only allow clicking if not currently animating
+                if (animationState === 'closed' || animationState === 'open') {
+                    toggleCofreAnimation();
+                    
+                    // Change cursor temporarily
+                    canvas.style.cursor = 'pointer';
+                    setTimeout(() => {
+                        canvas.style.cursor = 'grab';
+                    }, 1000);
+                }
             }
-        } else {
-            console.log('CofreModel not loaded yet or is null');
         }
     });
 
@@ -277,12 +327,7 @@ export function initAboutScene() {
 
         if (cofreModel) {
             const intersects = raycaster.intersectObject(cofreModel, true);
-            
-            if (intersects.length > 0) {
-                canvas.style.cursor = 'pointer';
-            } else {
-                canvas.style.cursor = 'grab';
-            }
+            canvas.style.cursor = intersects.length > 0 ? 'pointer' : 'grab';
         }
     });
 
@@ -296,7 +341,7 @@ export function initAboutScene() {
     const render = (t) => {
         delta = clock.getDelta();
 
-        // Update Blender animations (only if playing)
+        // Update Blender animations
         if (mixer) {
             mixer.update(delta);
         }
@@ -305,7 +350,7 @@ export function initAboutScene() {
         particles.update();
         controls.update();
 
-        // Reduced breathing effect
+        // Subtle breathing effect
         const breathe = Math.sin(clock.elapsedTime * 0.3) * 0.01 + 1;
         mainModel.scale.setScalar(breathe);
 

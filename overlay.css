@@ -45,9 +45,9 @@ header ul {
 }
 
 header ul li {
-  cursor: pointer;
   padding: 6px 15px;
   border: 1px solid transparent;
+  color: white;
 }
 
 header ul li:hover {
