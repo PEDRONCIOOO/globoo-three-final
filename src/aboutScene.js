@@ -50,9 +50,6 @@ function loadCriptoModel() {
                         action.clampWhenFinished = true; // Stay at final frame
                         action.enable = true;
                         
-                        // DON'T start the animation yet
-                        // action.play(); <- Remove this
-                        
                         actions.push(action);
                     });
                     
@@ -97,21 +94,6 @@ function playCofreAnimation() {
         isAnimationPlayed = true;
         
         // Optional: Add visual feedback
-        if (cofreModel) {
-            // Flash effect
-            const originalEmissive = new THREE.Color();
-            cofreModel.traverse((child) => {
-                if (child.isMesh && child.material) {
-                    originalEmissive.copy(child.material.emissive);
-                    child.material.emissive.setHex(0x4290c8);
-                    
-                    // Fade back to normal
-                    setTimeout(() => {
-                        child.material.emissive.copy(originalEmissive);
-                    }, 200);
-                }
-            });
-        }
     } else if (isAnimationPlayed) {
         console.log('Animation already played!');
     }
@@ -167,32 +149,31 @@ export function initAboutScene() {
     controls = new OrbitControls(camera, canvas);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.autoRotate = false;
-    controls.autoRotateSpeed = 0;
-    controls.enableZoom = true;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.4;
+    controls.enableZoom = false;
     controls.enablePan = false;
     controls.maxPolarAngle = Math.PI / 2;
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0x4290c8, 0.8);
+    const ambientLight = new THREE.AmbientLight(0x4290c8, 1);
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0x4290c8, 1.2);
     directionalLight.position.set(10, 10, 5);
     directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 2048;
-    directionalLight.shadow.mapSize.height = 2048;
+    directionalLight.shadow.mapSize.width = 1084;
+    directionalLight.shadow.mapSize.height = 1084;
     scene.add(directionalLight);
 
-    const pointLight1 = new THREE.PointLight(0x00d4ff, 1.5, 50);
+    const pointLight1 = new THREE.PointLight(0x00d4ff, 1.5, 20);
     pointLight1.position.set(-10, 5, -10);
     scene.add(pointLight1);
 
-    const pointLight2 = new THREE.PointLight(0x4290c8, 1.2, 50);
+    const pointLight2 = new THREE.PointLight(0x4290c8, 1.2, 20);
     pointLight2.position.set(10, -5, 10);
     scene.add(pointLight2);
 
-    // Post-processing
     composer = new EffectComposer(renderer);
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
@@ -213,17 +194,12 @@ export function initAboutScene() {
 
     // Load the crypto safe model
     loadCriptoModel().then((criptoModel) => {
-        console.log('Crypto safe model loaded', criptoModel);
         mainModel.add(criptoModel);
         
         // DEBUG: Add bounding box helper to visualize clickable area
         const box = new THREE.Box3().setFromObject(cofreModel);
         const helper = new THREE.Box3Helper(box, 0xff0000);
         scene.add(helper);
-        console.log('Bounding box added for debugging');
-        
-        console.log('CofreModel ready for clicking:', cofreModel);
-        console.log('Model children count:', cofreModel.children.length);
         
         hideLoader();
     }).catch((error) => {
@@ -254,7 +230,7 @@ export function initAboutScene() {
     // Particles
     const particles = createParticles({ 
         particlesCount: 1200,
-        size: 25,
+        size: 20,
         scale: 0.8,
         color: 0x4290c8
     });
@@ -262,26 +238,18 @@ export function initAboutScene() {
 
     // Click event listener with debugging
     canvas.addEventListener('click', (event) => {
-        console.log('Canvas clicked!'); // First check - is the canvas receiving clicks?
         
         // Calculate mouse position in normalized device coordinates
         const rect = canvas.getBoundingClientRect();
         mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
         
-        console.log('Mouse position:', mouse.x, mouse.y); // Check mouse coordinates
-        
         // Cast ray from camera through mouse position
         raycaster.setFromCamera(mouse, camera);
-        console.log('Raycaster set up'); // Check if raycaster is working
         
         // Check for intersections with the cofre
-        if (cofreModel) {
-            console.log('CofreModel exists:', cofreModel); // Check if model is loaded
-            
+            if (cofreModel) {
             const intersects = raycaster.intersectObject(cofreModel, true);
-            console.log('Intersections found:', intersects.length); // Check intersections
-            
             if (intersects.length > 0) {
                 console.log('Cofre clicked! Intersection details:', intersects[0]);
                 playCofreAnimation();
@@ -298,23 +266,6 @@ export function initAboutScene() {
             console.log('CofreModel not loaded yet or is null');
         }
     });
-
-    // Add this simple test right after the canvas addEventListener
-    // This should fire regardless of 3D intersections
-    canvas.addEventListener('click', (event) => {
-        console.log('🔥 CANVAS CLICKED! Event:', event);
-        console.log('🔥 Event target:', event.target);
-        console.log('🔥 Canvas element:', canvas);
-        
-        // Rest of your existing click code...
-        console.log('Canvas clicked!');
-        // ... existing code
-    });
-
-    // Also add this to test if the canvas is properly set up
-    console.log('🔥 Canvas element found:', canvas);
-    console.log('🔥 Canvas dimensions:', canvas.width, 'x', canvas.height);
-    console.log('🔥 Canvas style:', canvas.style.cssText);
 
     // Hover effect for cofre
     canvas.addEventListener('mousemove', (event) => {
