@@ -15,19 +15,17 @@
       <canvas id="webgl"></canvas>
     </div>
     <div class="container">
-      <header>
-        <div class="brand">
-          <img src="/globoo.png" alt="Globoo Logo" width="100" />
-        </div>
-        <div>
-          <ul>
-            <li>Home</li>
-            <li>Serviços</li>
-            <li>Sobre</li>
-          </ul>
-        </div>
-        <button>Suporte</button>
-      </header>
+<header>
+  <div class="brand">
+    <img src="/logo-globoo.png" alt="Globoo" width="100px" />
+  </div>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/about.html">Sobre</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <button>BAIXAR APP</button>
+</header>
 
       <div class="main-wrapper">
         <section class="section section-1">
@@ -215,37 +213,6 @@ seus investimentos.</p>
             </div>
           </div>
         </section>
-
-        <section class="section section-6">
-          <div class="wrapper">
-            <div class="lottie-section">
-              <div class="lottie-content">
-                <h2>SEGURANÇA <strong>ABSOLUTA</strong></h2>
-                <p>
-                  Seus ativos protegidos pela mais avançada tecnologia de segurança cripto. 
-                  Nossa infraestrutura garante que seus investimentos estejam sempre seguros.
-                </p>
-                <div class="security-features">
-                  <div class="feature">
-                    <span class="feature-number">256</span>
-                    <span class="feature-text">Criptografia AES</span>
-                  </div>
-                  <div class="feature">
-                    <span class="feature-number">99.9%</span>
-                    <span class="feature-text">Uptime garantido</span>
-                  </div>
-                  <div class="feature">
-                    <span class="feature-number">24/7</span>
-                    <span class="feature-text">Monitoramento</span>
-                  </div>
-                </div>
-              </div>
-              <div class="threejs-container">
-                <canvas id="cofre-canvas"></canvas>
-              </div>
-            </div>
-          </div>
-        </section>
       </div>
 
       <footer>
@@ -334,179 +301,6 @@ seus investimentos.</p>
       });
     </script>
 
-    <!-- Load Three.js and GLTFLoader with correct CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
-    
-    <script>
-      // Simple Three.js Safe Animation without external dependencies
-      document.addEventListener('DOMContentLoaded', () => {
-        // Wait a bit more for scripts to fully load
-        setTimeout(() => {
-          const canvas = document.getElementById('cofre-canvas');
-          if (!canvas) {
-            console.error('Canvas not found');
-            return;
-          }
-          
-          // Check if THREE is available
-          if (typeof THREE === 'undefined') {
-            console.error('THREE.js not loaded - showing fallback');
-            // Show a fallback placeholder
-            canvas.style.background = 'linear-gradient(45deg, #4290c8, #298ebd)';
-            canvas.style.borderRadius = '15px';
-            canvas.style.display = 'flex';
-            canvas.style.alignItems = 'center';
-            canvas.style.justifyContent = 'center';
-            canvas.style.color = 'white';
-            canvas.style.fontSize = '2em';
-            canvas.innerHTML = '🔒';
-            return;
-          }
-          
-          console.log('THREE.js loaded successfully, creating scene...');
-          
-          // Create scene
-          const scene = new THREE.Scene();
-          const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-          const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-          
-          // Setup renderer
-          renderer.setSize(400, 400);
-          renderer.setClearColor(0x000000, 0);
-          renderer.shadowMap.enabled = true;
-          renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-          
-          // Lighting
-          const ambientLight = new THREE.AmbientLight(0x4290c8, 0.6);
-          scene.add(ambientLight);
-          
-          const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-          directionalLight.position.set(5, 5, 5);
-          directionalLight.castShadow = true;
-          scene.add(directionalLight);
-          
-          // Create a safe-like geometry (no external loader needed)
-          const group = new THREE.Group();
-          
-          // Main safe body
-          const bodyGeometry = new THREE.BoxGeometry(2, 2.5, 1.5);
-          const bodyMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0x2d3436,
-            metalness: 0.8,
-            roughness: 0.2
-          });
-          const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-          body.castShadow = true;
-          body.receiveShadow = true;
-          group.add(body);
-          
-          // Safe door
-          const doorGeometry = new THREE.BoxGeometry(1.8, 2.3, 0.1);
-          const doorMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0x4290c8,
-            metalness: 0.9,
-            roughness: 0.1
-          });
-          const door = new THREE.Mesh(doorGeometry, doorMaterial);
-          door.position.z = 0.8;
-          door.castShadow = true;
-          group.add(door);
-          
-          // Handle
-          const handleGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.3);
-          const handleMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0xffd700,
-            metalness: 1,
-            roughness: 0
-          });
-          const handle = new THREE.Mesh(handleGeometry, handleMaterial);
-          handle.position.set(0.6, 0, 0.85);
-          handle.rotation.z = Math.PI / 2;
-          handle.castShadow = true;
-          group.add(handle);
-          
-          // Lock mechanism
-          const lockGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.05);
-          const lockMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0x2d3436,
-            metalness: 0.9,
-            roughness: 0.1
-          });
-          const lock = new THREE.Mesh(lockGeometry, lockMaterial);
-          lock.position.set(0, 0, 0.85);
-          lock.rotation.x = Math.PI / 2;
-          group.add(lock);
-          
-          scene.add(group);
-          
-          // Position camera
-          camera.position.set(3, 2, 5);
-          camera.lookAt(0, 0, 0);
-          
-          // Animation variables
-          let animationId;
-          let isAnimating = false;
-          
-          // Animation function
-          function animate() {
-            if (!isAnimating) return;
-            
-            // Rotate the entire safe slowly
-            group.rotation.y += 0.005;
-            
-            // Spin the handle
-            handle.rotation.z += 0.02;
-            
-            // Subtle bobbing motion
-            group.position.y = Math.sin(Date.now() * 0.001) * 0.1;
-            
-            renderer.render(scene, camera);
-            animationId = requestAnimationFrame(animate);
-          }
-          
-          // Start/stop animation functions
-          function startAnimation() {
-            if (!isAnimating) {
-              isAnimating = true;
-              animate();
-              console.log('Safe animation started');
-            }
-          }
-          
-          function stopAnimation() {
-            isAnimating = false;
-            if (animationId) {
-              cancelAnimationFrame(animationId);
-            }
-          }
-          
-          // Intersection Observer for performance
-          const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                startAnimation();
-              } else {
-                stopAnimation();
-              }
-            });
-          }, { threshold: 0.1 });
-          
-          observer.observe(canvas);
-          
-          // Handle window resize
-          window.addEventListener('resize', () => {
-            const size = Math.min(400, window.innerWidth - 40);
-            renderer.setSize(size, size);
-            camera.aspect = 1;
-            camera.updateProjectionMatrix();
-          });
-          
-          // Start the animation immediately for testing
-          startAnimation();
-          
-        }, 1000); // Increased delay to 1 second
-      });
-    </script>
     
     <script type="module" src="/main.js"></script>
   </body>

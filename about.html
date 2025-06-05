@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Globoo - Sobre</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="overlay.css" />
+  </head>
+  <body>
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    
+    <div id="webgl-container">
+      <canvas id="webgl"></canvas>
+    </div>
+
+    <div class="container">
+      <div class="main-wrapper">
+        <!-- Keep the same header -->
+        <header>
+  <div class="brand">
+    <img src="/logo-globoo.png" alt="Globoo" width="100px" />
+  </div>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/about.html">Sobre</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <button>BAIXAR APP</button>
+</header>
+
+        <!-- Different content for this page -->
+        <section class="section section-about-1">
+          <div class="wrapper">
+            <h2>SOBRE A <strong>GLOBOO</strong></h2>
+            <p>
+              Revolucionando o mercado de criptomoedas no Brasil com tecnologia 
+              de ponta e segurança máxima para seus investimentos.
+            </p>
+          </div>
+        </section>
+
+        <section class="section section-about-2">
+          <div class="wrapper">
+            <h2>NOSSA <strong>MISSÃO</strong></h2>
+            <p>
+              Democratizar o acesso às criptomoedas e proporcionar uma 
+              experiência única de investimento digital.
+            </p>
+          </div>
+        </section>
+
+        <footer>
+          <!-- Same footer as home -->
+        </footer>
+      </div>
+
+      <div class="loader-container">
+        <div class="loader"></div>
+      </div>
+    </div>
+
+    <!-- Same cursor script -->
+    <script>
+      const cursor = document.querySelector('.cursor');
+      const cursorFollower = document.querySelector('.cursor-follower');
+      
+      let mouseX = 0;
+      let mouseY = 0;
+      let followerX = 0;
+      let followerY = 0;
+      
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+      });
+      
+      function animateFollower() {
+        const speed = 0.15;
+        
+        followerX += (mouseX - followerX) * speed;
+        followerY += (mouseY - followerY) * speed;
+        
+        cursorFollower.style.left = followerX + 'px';
+        cursorFollower.style.top = followerY + 'px';
+        
+        requestAnimationFrame(animateFollower);
+      }
+      animateFollower();
+      
+      const hoverElements = document.querySelectorAll('button, a, .feature-item, .card');
+      
+      hoverElements.forEach(element => {
+        element.addEventListener('mouseenter', () => {
+          cursor.classList.add('cursor-hover');
+          cursorFollower.classList.add('cursor-hover');
+        });
+        
+        element.addEventListener('mouseleave', () => {
+          cursor.classList.remove('cursor-hover');
+          cursorFollower.classList.remove('cursor-hover');
+        });
+      });
+      
+      document.addEventListener('mousedown', () => {
+        cursor.classList.add('cursor-click');
+      });
+      
+      document.addEventListener('mouseup', () => {
+        cursor.classList.remove('cursor-click');
+      });
+    </script>
+
+    <script type="module" src="/about.js"></script>
+  </body>
+</html>

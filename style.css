@@ -10,12 +10,11 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  cursor: none;
 }
 
 #webgl-container {
-  pointer-events: none;
-  position: fixed;
+  pointer-events: auto !important;
+  position: relative;
   width: 100%;
   height: 100vh;
 }

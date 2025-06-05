@@ -20,6 +20,7 @@ header {
   padding: 20px 30px;
   position: absolute;
   width: 100%;
+  left: 0;
   pointer-events: all;
 }
 
@@ -31,6 +32,7 @@ header {
   color: cyan;
   font-size: 1.4em;
 }
+
 
 header ul {
   list-style: none;
@@ -594,109 +596,26 @@ footer {
   text-shadow: 0 0 8px rgba(66, 144, 200, 0.3);
 }
 
-/* SECTION 6  */
-.section-6 {
-  padding: 6em 2em;
-  background: linear-gradient(135deg, rgba(66, 144, 200, 0.05) 0%, rgba(41, 142, 189, 0.02) 100%);
-  position: relative;
-  overflow: hidden;
+
+/* About page specific styles */
+.section-about-1, .section-about-2 {
+  padding: 4em 2em;
 }
 
-.section-6::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 70% 30%, rgba(66, 144, 200, 0.08) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.lottie-section {
-  display: flex;
-  align-items: center;
-  gap: 80px;
-  position: relative;
-  z-index: 2;
-}
-
-.lottie-content {
-  flex: 1;
-  max-width: 500px;
-}
-
-.lottie-content h2 {
-  font-size: 3.5em;
-  font-weight: 200;
-  letter-spacing: -0.05em;
-  text-transform: uppercase;
-  line-height: 0.9em;
-  margin-bottom: 30px;
-  color: white;
-  text-shadow: 0 0 30px rgba(66, 144, 200, 0.3);
-}
-
-.lottie-content p {
-  font-size: 1.2em;
-  color: #b8d4e3;
-  font-family: 'Roboto Flex', sans-serif;
-  font-weight: 300;
-  line-height: 1.6;
-  margin-bottom: 40px;
-}
-
-.security-features {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-}
-
-.feature {
+.section-about-1 h2, .section-about-2 h2 {
+  color: #00ff88;
+  font-size: 3em;
   text-align: center;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 15px;
-  border: 1px solid rgba(66, 144, 200, 0.2);
-  transition: all 0.3s ease;
+  margin-bottom: 1em;
 }
 
-.feature:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(66, 144, 200, 0.4);
-  transform: translateY(-5px);
+.section-about-1 p, .section-about-2 p {
+  color: #b8f5d3;
+  font-size: 1.2em;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
 }
-
-.feature-number {
-  display: block;
-  font-size: 2.2em;
-  font-weight: 300;
-  color: #4290c8;
-  font-family: 'Barlow Condensed', sans-serif;
-  margin-bottom: 8px;
-}
-
-.feature-text {
-  font-size: 0.9em;
-  color: #b8d4e3;
-  font-family: 'Roboto Flex', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.lottie-container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#lottie-cofre {
-  width: 400px;
-  height: 400px;
-  filter: drop-shadow(0 0 30px rgba(66, 144, 200, 0.3));
-}
-
 
 /* Mobile Responsive */
 @media only screen and (max-width: 1200px) {
@@ -815,32 +734,5 @@ footer {
   
   .feature-content p {
     font-size: 0.85em;
-  }
-    .section-6 {
-    padding: 4em 1em;
-  }
-  
-  .lottie-section {
-    flex-direction: column;
-    gap: 40px;
-    text-align: center;
-  }
-  
-  .lottie-content h2 {
-    font-size: 2.5em;
-  }
-  
-  .lottie-content p {
-    font-size: 1.1em;
-  }
-  
-  .security-features {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  #lottie-cofre {
-    width: 300px;
-    height: 300px;
   }
 }
