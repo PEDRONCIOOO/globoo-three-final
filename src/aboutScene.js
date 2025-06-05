@@ -3,13 +3,12 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 import { initResizeEventListener } from './system/resize.js';
 import { createParticles } from './particles';
 import Float from './Float';
 
-let scene, camera, renderer, composer, controls;
+let scene, camera, renderer, composer;
 let mainModel;
 let isScrolling = false;
 let cameraTarget = new THREE.Vector3(0, 0, 0);
@@ -18,6 +17,10 @@ let actions = []; // Store animation actions
 let animationState = 'closed'; // Track animation state: 'closed', 'opening', 'open', 'closing'
 let cofreModel; // Store cofre model for click detection
 let raycaster, mouse; // For click detection
+
+// Add these variables at the top with your other declarations
+let interiorLight; // Light inside the cofre
+let coinSpotlight; // Light to illuminate falling coins
 
 // Crypto safe model loader with animation support
 function loadCriptoModel() {
@@ -84,6 +87,20 @@ function toggleCofreAnimation() {
             action.timeScale = 1; // Normal speed
             action.play();
         });
+
+        // TURN ON INTERIOR LIGHTS when opening
+        setTimeout(() => {
+            // Gradually increase interior lighting
+            const lightTween = setInterval(() => {
+                if (interiorLight.intensity < 1.5) {
+                    interiorLight.intensity += 0.1;
+                    coinSpotlight.intensity += 0.08;
+                    window.treasureGlow.intensity += 0.06;
+                } else {
+                    clearInterval(lightTween);
+                }
+            }, 50);
+        }, 800); // Start lighting after door begins to open
         
         // Set state to 'open' when animation finishes
         setTimeout(() => {
@@ -95,6 +112,20 @@ function toggleCofreAnimation() {
     } else if (animationState === 'open') {
         // Play animation backward with PROPER SEQUENCING
         animationState = 'closing';
+
+        // TURN OFF INTERIOR LIGHTS when closing starts
+        const lightFadeOut = setInterval(() => {
+            if (interiorLight.intensity > 0.1) {
+                interiorLight.intensity -= 0.1;
+                coinSpotlight.intensity -= 0.08;
+                window.treasureGlow.intensity -= 0.06;
+            } else {
+                interiorLight.intensity = 0;
+                coinSpotlight.intensity = 0;
+                window.treasureGlow.intensity = 0;
+                clearInterval(lightFadeOut);
+            }
+        }, 30);
         
         // First: Play coin animations (make coins go inside)
         const coinAnimations = actions.filter(action => {
@@ -113,9 +144,6 @@ function toggleCofreAnimation() {
                    name.includes('handle');
         });
         
-        console.log('Coin animations:', coinAnimations.length);
-        console.log('Door animations:', doorAnimations.length);
-        
         // Start coin animations first
         coinAnimations.forEach(action => {
             action.timeScale = -1; // Reverse speed
@@ -131,14 +159,14 @@ function toggleCofreAnimation() {
                 action.paused = false;
                 action.play();
             });
-        }, coinDuration * 800); // Start door closing when coins are 80% done
+        }, coinDuration * 850); // Start door closing when coins are 80% done
         
         // Set state to 'closed' when all animations finish
         setTimeout(() => {
             if (animationState === 'closing') {
                 animationState = 'closed';
             }
-        }, getMaxAnimationDuration() * 1000);
+        }, getMaxAnimationDuration() * 850);
     }
     
     // Visual feedback - NO FLASH, just scale effect
@@ -186,14 +214,15 @@ export function initAboutScene() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color('#000');
 
-    // Camera setup
+    // Camera setup - POSIÇÃO FIXA
     camera = new THREE.PerspectiveCamera(
         32,
         window.innerWidth / window.innerHeight,
         0.1,
         1000
     );
-    camera.position.set(7, -2, -3);
+    camera.position.set(9, 1, -6);
+    camera.lookAt(0, 0, 0); // Olhar sempre para o centro
 
     // Renderer setup
     renderer = new THREE.WebGLRenderer({
@@ -206,22 +235,14 @@ export function initAboutScene() {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    // Controls
-    controls = new OrbitControls(camera, canvas);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.autoRotate = false;
-    controls.autoRotateSpeed = 0;
-    controls.enableZoom = false;
-    controls.enablePan = false;
-    controls.maxPolarAngle = Math.PI / 2;
+    // REMOVIDO: Todos os controles OrbitControls
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0x4290c8, 1);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0x4290c8, 1.2);
-    directionalLight.position.set(10, 10, 5);
+    const directionalLight = new THREE.DirectionalLight(0x4290c8, 0.5);
+    directionalLight.position.set(6, 5, 5);
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 1084;
     directionalLight.shadow.mapSize.height = 1084;
@@ -234,6 +255,30 @@ export function initAboutScene() {
     const pointLight2 = new THREE.PointLight(0x4290c8, 1.2, 20);
     pointLight2.position.set(10, -5, 10);
     scene.add(pointLight2);
+
+    // ========== INTERIOR COFRE LIGHTING ==========
+    
+    // Interior light - starts OFF, turns ON when cofre opens
+    interiorLight = new THREE.PointLight(0xffd700, 0, 15); // Gold color, intensity 0 (off)
+    interiorLight.position.set(-1, 1, -2); // Position inside the cofre
+    interiorLight.castShadow = true;
+    scene.add(interiorLight);
+
+    // Coin spotlight - illuminates falling coins
+    coinSpotlight = new THREE.SpotLight(0xffd700, 0, 25, Math.PI * 0.4, 0.5); // Gold spotlight
+    coinSpotlight.position.set(-1, 3, -2); // Above the cofre
+    coinSpotlight.target.position.set(-1, 0, -2); // Target inside cofre
+    coinSpotlight.castShadow = true;
+    scene.add(coinSpotlight);
+    scene.add(coinSpotlight.target);
+
+    // Additional warm light to enhance the "treasure" effect
+    const treasureGlow = new THREE.PointLight(0xffaa00, 0, 10); // Warm orange glow
+    treasureGlow.position.set(-1, 0.5, -2); // Inside cofre, lower position
+    scene.add(treasureGlow);
+
+    // Store reference for animation control
+    window.treasureGlow = treasureGlow; // Make it accessible
 
     // Post-processing
     composer = new EffectComposer(renderer);
@@ -292,7 +337,7 @@ export function initAboutScene() {
     });
     scene.add(particles.group);
 
-    // Click event listener
+    // Click event listener - SEM MUDANÇA DE CURSOR
     canvas.addEventListener('click', (event) => {
         const rect = canvas.getBoundingClientRect();
         mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -306,30 +351,12 @@ export function initAboutScene() {
                 // Only allow clicking if not currently animating
                 if (animationState === 'closed' || animationState === 'open') {
                     toggleCofreAnimation();
-                    
-                    // Change cursor temporarily
-                    canvas.style.cursor = 'pointer';
-                    setTimeout(() => {
-                        canvas.style.cursor = 'grab';
-                    }, 1000);
                 }
             }
         }
     });
 
-    // Hover effect for cofre
-    canvas.addEventListener('mousemove', (event) => {
-        const rect = canvas.getBoundingClientRect();
-        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
-        raycaster.setFromCamera(mouse, camera);
-
-        if (cofreModel) {
-            const intersects = raycaster.intersectObject(cofreModel, true);
-            canvas.style.cursor = intersects.length > 0 ? 'pointer' : 'grab';
-        }
-    });
+    // REMOVIDO: Hover effect que mudava o cursor
 
     // Resize listener
     initResizeEventListener([camera], [renderer, composer]);
@@ -348,7 +375,7 @@ export function initAboutScene() {
 
         floatMainModel.update();
         particles.update();
-        controls.update();
+        // REMOVIDO: controls.update();
 
         // Subtle breathing effect
         const breathe = Math.sin(clock.elapsedTime * 0.3) * 0.01 + 1;
