@@ -615,7 +615,7 @@ footer {
   justify-content: flex-start;
   padding: 0 4em;
   position: relative;
-  background: linear-gradient(135deg, rgba(66, 144, 200, 0.05) 0%, rgba(0, 0, 0, 0.8) 100%);
+  z-index: -1;
 }
 
 .wrapper-about-1{
@@ -640,7 +640,6 @@ footer {
   color: #4290c8;
   font-weight: 600;
   display: block;
-  transform: translateX(20px);
   text-shadow: 0 0 20px rgba(66, 144, 200, 0.3);
 }
 

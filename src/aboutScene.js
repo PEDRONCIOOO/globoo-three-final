@@ -7,11 +7,10 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { initResizeEventListener } from './system/resize.js';
 import { createParticles } from './particles';
 import Float from './Float';
+import { aboutCameraAnimation, cameraTarget, isScrolling } from './aboutCameraAnimation.js';
 
 let scene, camera, renderer, composer;
 let mainModel;
-let isScrolling = false;
-let cameraTarget = new THREE.Vector3(0, 0, 0);
 let mixer; // Animation mixer for Blender animations
 let actions = []; // Store animation actions
 let animationState = 'closed'; // Track animation state: 'closed', 'opening', 'open', 'closing'
@@ -285,6 +284,9 @@ function hideLoader() {
     }
 }
 
+// Make toggleCofreAnimation globally accessible
+window.toggleCofreAnimation = toggleCofreAnimation;
+
 export function initAboutScene() {
     const canvas = document.querySelector('#webgl');
     const container = document.querySelector('#webgl-container');
@@ -297,7 +299,7 @@ export function initAboutScene() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color('#000');
 
-    // Camera setup - POSIÇÃO FIXA
+    // Camera setup - POSIÇÃO INICIAL
     camera = new THREE.PerspectiveCamera(
         32,
         window.innerWidth / window.innerHeight,
@@ -305,7 +307,7 @@ export function initAboutScene() {
         1000
     );
     camera.position.set(9, 1, -6);
-    camera.lookAt(0, 0, 0); // Olhar sempre para o centro
+    camera.lookAt(0, 0, 0);
 
     // Renderer setup
     renderer = new THREE.WebGLRenderer({
@@ -385,6 +387,10 @@ export function initAboutScene() {
     // Load the crypto safe model
     loadCriptoModel().then((criptoModel) => {
         mainModel.add(criptoModel);
+        
+        // Initialize camera animation AFTER model is loaded
+        aboutCameraAnimation(camera, cofreModel);
+        
         hideLoader();
     }).catch((error) => {
         console.error('Error loading crypto model:', error);
@@ -400,6 +406,9 @@ export function initAboutScene() {
         fallbackMesh.castShadow = true;
         mainModel.add(fallbackMesh);
         cofreModel = fallbackMesh;
+        
+        // Initialize camera animation even with fallback
+        aboutCameraAnimation(camera, cofreModel);
         hideLoader();
     });
 
@@ -458,13 +467,15 @@ export function initAboutScene() {
 
         floatMainModel.update();
         particles.update();
-        // REMOVIDO: controls.update();
 
         // Subtle breathing effect
         const breathe = Math.sin(clock.elapsedTime * 0.3) * 0.01 + 1;
         mainModel.scale.setScalar(breathe);
 
-        isScrolling && camera.lookAt(cameraTarget);
+        // Update camera target when scrolling
+        if (isScrolling) {
+            camera.lookAt(cameraTarget);
+        }
         
         composer.render();
         requestAnimationFrame(render);

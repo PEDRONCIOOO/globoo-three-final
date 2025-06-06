@@ -1,5 +1,5 @@
-
-import { initAboutScene } from "./src/aboutScene";
+import { initAboutScene } from './src/aboutScene.js';
+import './src/aboutCameraAnimation.js'; // Import the camera animation
 
 onload = () => {
   initAboutScene();
