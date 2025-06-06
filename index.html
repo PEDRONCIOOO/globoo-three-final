@@ -21,6 +21,7 @@
           <ul>
             <li>Home</li>
             <li>Serviços</li>
+            <a href="/criptomoedas.html">Criptomoedas</a>
             <li>Sobre</li>
           </ul>
         </div>
@@ -102,6 +103,7 @@
         </section>
 
         <section class="section section-4">
+<<<<<<< Updated upstream
           <div class="wrapper">
             <div class="content-grid">
               <div class="text-content">
@@ -143,6 +145,44 @@
                       <strong>24/7</strong>
                       <span>Suporte</span>
                     </div>
+=======
+          <div class="wrapper data-wrapper">
+            <h1><strong>VOCÊ MERECE</strong> ESSA EVOLUÇÃO</h1>
+            <div class="couple">
+              <div class="people-wrap">
+                <img src="/mulher.png" alt="Pessoas usando criptoativos">
+                <img src="/véio.png" alt="Pessoas usando criptoativos">
+                <img src="/homem.png" alt="Pessoas usando criptoativos">
+                <img src="/fazendeira.png" alt="Pessoas usando criptoativos">
+              </div>
+              <div class="deserve-wrap">
+                <div class="box-percentage">
+                  <h2>24%</h2>
+                  <div class="box-text">
+                    <p>DA POPULAÇÃO BRASILEIRA</p>
+                    <span>já movimenta algum criptoativo</span>
+                  </div>
+                </div>
+                <div class="box-percentage">
+                  <h2>46%</h2>
+                  <div class="box-text">
+                    <p>É O AUMENTO DE CONTAS DIGITAIS</p>
+                    <span>abertas entre 2023 e 2024</span>
+                  </div>
+                </div>
+                <div class="box-percentage">
+                  <h2>248</h2>
+                  <div class="box-text">
+                    <p>BILHÕES DE REAIS EM CRIPTO</p>
+                    <span>foram movimentados em 2024</span>
+                  </div>
+                </div>
+                <div class="box-percentage">
+                  <h2>50%</h2>
+                  <div class="box-text">
+                    <p>DA POPULAÇÃO</p>
+                    <span>deve ter saldo ou investimentos em cripto até 2030</span>
+>>>>>>> Stashed changes
                   </div>
                 </div>
               </div>
@@ -179,6 +219,66 @@
     <div class="loader-container">
       <div class="loader"></div>
     </div>
+<<<<<<< Updated upstream
+=======
+    <script>
+      // ANIMACAO CURSOR 
+      const cursor = document.querySelector('.cursor');
+      const cursorFollower = document.querySelector('.cursor-follower');
+      
+      let mouseX = 0;
+      let mouseY = 0;
+      let followerX = 0;
+      let followerY = 0;
+      
+      // Update mouse position
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+      });
+      
+      // Smooth follower animation
+      function animateFollower() {
+        const speed = 0.15;
+        
+        followerX += (mouseX - followerX) * speed;
+        followerY += (mouseY - followerY) * speed;
+        
+        cursorFollower.style.left = followerX + 'px';
+        cursorFollower.style.top = followerY + 'px';
+        
+        requestAnimationFrame(animateFollower);
+      }
+      animateFollower();
+      
+      // Hover effects
+      const hoverElements = document.querySelectorAll('button, a, .feature-item, .card');
+      
+      hoverElements.forEach(element => {
+        element.addEventListener('mouseenter', () => {
+          cursor.classList.add('cursor-hover');
+          cursorFollower.classList.add('cursor-hover');
+        });
+        
+        element.addEventListener('mouseleave', () => {
+          cursor.classList.remove('cursor-hover');
+          cursorFollower.classList.remove('cursor-hover');
+        });
+      });
+      
+      // Click effect
+      document.addEventListener('mousedown', () => {
+        cursor.classList.add('cursor-click');
+      });
+      
+      document.addEventListener('mouseup', () => {
+        cursor.classList.remove('cursor-click');
+      });
+    </script>
+>>>>>>> Stashed changes
     <script type="module" src="/main.js"></script>
   </body>
 </html>
