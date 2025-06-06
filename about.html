@@ -11,83 +11,106 @@
   <body>
     <div class="cursor"></div>
     <div class="cursor-follower"></div>
-    
+
     <div id="webgl-container">
       <canvas id="webgl"></canvas>
     </div>
+    
+    <!-- Add this hero section -->
+    <section class="section-about-hero">
+      <div class="hero-content-left">
+        <h1>Descubra o <strong>valor real</strong>  do seu dinheiro</h1>
+        <p>
+          Na Globoo, suas criptomoedas deixam de ser só um investimento, 
+          <strong>elas se tornam liberdade. Guarde, movimente ou multiplique.</strong>. Tudo em um só lugar.
+        </p>
+        <div class="download-wrapper-2">
+              <div class="apple">
+                <img src="/app-store.png" alt="Download on IOS.">
+              </div>
+              <div class="android">
+                <img src="/google-play.png" alt="Download on Android.">
+              </div>
+            </div>
+      </div>
+    </section>
 
     <div class="container">
       <div class="main-wrapper">
         <!-- Keep the same header -->
         <header>
-  <div class="brand">
-    <img src="/logo-globoo.png" alt="Globoo" width="100px" />
-  </div>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/about.html">Serviços</a></li>
-    <li><a href="#contato">Contato</a></li>
-  </ul>
-  <button>BAIXAR APP</button>
-</header>
+          <div class="brand">
+            <img src="/logo-globoo.png" alt="Globoo" width="100px" />
+          </div>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about.html">Serviços</a></li>
+            <li><a href="#contato">Contato</a></li>
+          </ul>
+          <button>BAIXAR APP</button>
+        </header>
+        
       </div>
-      
+
       <div class="loader-container">
         <div class="loader"></div>
       </div>
+      
     </div>
 
     <!-- Same cursor script -->
     <script>
-      const cursor = document.querySelector('.cursor');
-      const cursorFollower = document.querySelector('.cursor-follower');
-      
+      const cursor = document.querySelector(".cursor");
+      const cursorFollower = document.querySelector(".cursor-follower");
+
       let mouseX = 0;
       let mouseY = 0;
       let followerX = 0;
       let followerY = 0;
-      
-      document.addEventListener('mousemove', (e) => {
+
+      document.addEventListener("mousemove", (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-        
-        cursor.style.left = mouseX + 'px';
-        cursor.style.top = mouseY + 'px';
+
+        cursor.style.left = mouseX + "px";
+        cursor.style.top = mouseY + "px";
       });
-      
+
       function animateFollower() {
         const speed = 0.15;
-        
+
         followerX += (mouseX - followerX) * speed;
         followerY += (mouseY - followerY) * speed;
-        
-        cursorFollower.style.left = followerX + 'px';
-        cursorFollower.style.top = followerY + 'px';
-        
+
+        cursorFollower.style.left = followerX + "px";
+        cursorFollower.style.top = followerY + "px";
+
         requestAnimationFrame(animateFollower);
       }
       animateFollower();
-      
-      const hoverElements = document.querySelectorAll('button, a, .feature-item, .card');
-      
-      hoverElements.forEach(element => {
-        element.addEventListener('mouseenter', () => {
-          cursor.classList.add('cursor-hover');
-          cursorFollower.classList.add('cursor-hover');
+
+      const hoverElements = document.querySelectorAll(
+        "button, a, .feature-item, .card"
+      );
+
+      hoverElements.forEach((element) => {
+        element.addEventListener("mouseenter", () => {
+          cursor.classList.add("cursor-hover");
+          cursorFollower.classList.add("cursor-hover");
         });
-        
-        element.addEventListener('mouseleave', () => {
-          cursor.classList.remove('cursor-hover');
-          cursorFollower.classList.remove('cursor-hover');
+
+        element.addEventListener("mouseleave", () => {
+          cursor.classList.remove("cursor-hover");
+          cursorFollower.classList.remove("cursor-hover");
         });
       });
-      
-      document.addEventListener('mousedown', () => {
-        cursor.classList.add('cursor-click');
+
+      document.addEventListener("mousedown", () => {
+        cursor.classList.add("cursor-click");
       });
-      
-      document.addEventListener('mouseup', () => {
-        cursor.classList.remove('cursor-click');
+
+      document.addEventListener("mouseup", () => {
+        cursor.classList.remove("cursor-click");
       });
     </script>
 

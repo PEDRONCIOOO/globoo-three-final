@@ -21,6 +21,8 @@ let raycaster, mouse; // For click detection
 // Add these variables at the top with your other declarations
 let interiorLight; // Light inside the cofre
 let coinSpotlight; // Light to illuminate falling coins
+let coinMeshes = []; // Store coin meshes for special effects
+let coinGlowMeshes = []; // Store glow meshes for coins
 
 // Crypto safe model loader with animation support
 function loadCriptoModel() {
@@ -35,6 +37,57 @@ function loadCriptoModel() {
                 
                 // Store model reference for click detection
                 cofreModel = model;
+                
+                // Find and enhance coin meshes
+                model.traverse((child) => {
+                    if (child.isMesh) {
+                        // Check if this is a coin mesh (by name or material)
+                        const name = child.name.toLowerCase();
+                        if (name.includes('bitcoin') || 
+                            name.includes('etherium') || 
+                            name.includes('coin') ||
+                            name.includes('curve')) {
+                            
+                            // Store reference to original coin meshes
+                            coinMeshes.push(child);
+                            
+                            // Keep original material unchanged
+                            if (child.material) {
+                                child.material.metalness = 0.9;
+                                child.material.roughness = 0.1;
+                                // DON'T change color or emissive - keep original
+                            }
+                            
+                            // Create a glow mesh around the coin (outline effect)
+                            const glowGeometry = child.geometry.clone();
+                            const glowMaterial = new THREE.MeshBasicMaterial({
+                                color: 0x00ffff,
+                                transparent: true,
+                                opacity: 0, // Start invisible
+                                side: THREE.BackSide, // Render from inside out for glow effect
+                            });
+                            
+                            const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
+                            glowMesh.scale.setScalar(1.05); // Slightly bigger than original
+                            glowMesh.position.copy(child.position);
+                            glowMesh.rotation.copy(child.rotation);
+                            
+                            // Add glow mesh to the same parent as the coin
+                            child.parent.add(glowMesh);
+                            coinGlowMeshes.push(glowMesh);
+                            
+                        } else {
+                            // Regular cofre materials
+                            if (child.material) {
+                                child.material.metalness = 0.9;
+                                child.material.roughness = 0.1;
+                                if (child.material.color) {
+                                    child.material.color.multiplyScalar(1.2);
+                                }
+                            }
+                        }
+                    }
+                });
                 
                 // Check for animations
                 if (gltf.animations && gltf.animations.length > 0) {
@@ -54,24 +107,44 @@ function loadCriptoModel() {
                     });
                 }
                 
-                // Enhance materials
-                model.traverse((child) => {
-                    if (child.isMesh) {
-                        if (child.material) {
-                            child.material.metalness = 0.9;
-                            child.material.roughness = 0.1;
-                            if (child.material.color) {
-                                child.material.color.multiplyScalar(1.2);
-                            }
-                        }
-                    }
-                });
-                
                 resolve(model);
             },
             undefined,
             reject
         );
+    });
+}
+
+// Function to animate coin glow effect (neon outline)
+function animateCoinsGlow(intensity = 1.0) {
+    coinGlowMeshes.forEach(glowMesh => {
+        if (glowMesh.material) {
+            glowMesh.material.opacity = intensity * 0.3; // Max opacity of 30%
+            
+            // Add pulsing effect during animation
+            if (intensity > 0) {
+                const pulseAnimation = () => {
+                    const time = Date.now() * 0.003; // Slower pulse
+                    const pulse = (Math.sin(time) + 1) * 0.5; // 0 to 1
+                    
+                    // Pulse the opacity and scale
+                    const finalOpacity = intensity * 0.3 * (0.5 + pulse * 0.5);
+                    const finalScale = 1.05 + (pulse * 0.02); // Scale between 1.05 and 1.07
+                    
+                    glowMesh.material.opacity = finalOpacity;
+                    glowMesh.scale.setScalar(finalScale);
+                    
+                    if (animationState === 'opening' || animationState === 'closing') {
+                        requestAnimationFrame(pulseAnimation);
+                    }
+                };
+                pulseAnimation();
+            } else {
+                // Turn off glow
+                glowMesh.material.opacity = 0;
+                glowMesh.scale.setScalar(1.05);
+            }
+        }
     });
 }
 
@@ -88,7 +161,7 @@ function toggleCofreAnimation() {
             action.play();
         });
 
-        // TURN ON INTERIOR LIGHTS when opening
+        // TURN ON INTERIOR LIGHTS AND COIN GLOW when opening
         setTimeout(() => {
             // Gradually increase interior lighting
             const lightTween = setInterval(() => {
@@ -100,12 +173,17 @@ function toggleCofreAnimation() {
                     clearInterval(lightTween);
                 }
             }, 50);
-        }, 800); // Start lighting after door begins to open
+            
+            // Make coins start glowing when they begin to fall
+            animateCoinsGlow(0.8); // Reduced intensity for subtle glow
+        }, 800);
         
         // Set state to 'open' when animation finishes
         setTimeout(() => {
             if (animationState === 'opening') {
                 animationState = 'open';
+                // Keep coins glowing while open
+                animateCoinsGlow(0.5); // Gentle glow when open
             }
         }, getMaxAnimationDuration() * 1000);
         
@@ -113,7 +191,7 @@ function toggleCofreAnimation() {
         // Play animation backward with PROPER SEQUENCING
         animationState = 'closing';
 
-        // TURN OFF INTERIOR LIGHTS when closing starts
+        // TURN OFF INTERIOR LIGHTS AND COIN GLOW when closing starts
         const lightFadeOut = setInterval(() => {
             if (interiorLight.intensity > 0.1) {
                 interiorLight.intensity -= 0.1;
@@ -126,6 +204,9 @@ function toggleCofreAnimation() {
                 clearInterval(lightFadeOut);
             }
         }, 30);
+        
+        // Make coins glow brighter as they "return" to cofre
+        animateCoinsGlow(1.0); // Slightly brighter when closing
         
         // First: Play coin animations (make coins go inside)
         const coinAnimations = actions.filter(action => {
@@ -159,12 +240,14 @@ function toggleCofreAnimation() {
                 action.paused = false;
                 action.play();
             });
-        }, coinDuration * 850); // Start door closing when coins are 80% done
+        }, coinDuration * 850);
         
         // Set state to 'closed' when all animations finish
         setTimeout(() => {
             if (animationState === 'closing') {
                 animationState = 'closed';
+                // Turn off coin glow when fully closed
+                animateCoinsGlow(0);
             }
         }, getMaxAnimationDuration() * 850);
     }
@@ -238,7 +321,7 @@ export function initAboutScene() {
     // REMOVIDO: Todos os controles OrbitControls
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0x4290c8, 1);
+    const ambientLight = new THREE.AmbientLight(0x4290c8, 0.3);
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0x4290c8, 0.5);
@@ -248,37 +331,37 @@ export function initAboutScene() {
     directionalLight.shadow.mapSize.height = 1084;
     scene.add(directionalLight);
 
-    const pointLight1 = new THREE.PointLight(0x00d4ff, 1.5, 20);
+    const pointLight1 = new THREE.PointLight(0x00d4ff, 1.5, 0.5);
     pointLight1.position.set(-10, 5, -10);
     scene.add(pointLight1);
 
-    const pointLight2 = new THREE.PointLight(0x4290c8, 1.2, 20);
+    const pointLight2 = new THREE.PointLight(0x4290c8, 1.2, 0.5);
     pointLight2.position.set(10, -5, 10);
     scene.add(pointLight2);
 
     // ========== INTERIOR COFRE LIGHTING ==========
     
     // Interior light - starts OFF, turns ON when cofre opens
-    interiorLight = new THREE.PointLight(0xffd700, 0, 15); // Gold color, intensity 0 (off)
+    interiorLight = new THREE.PointLight(0x4290c8, 0, 1); // Changed to blue instead of cyan for contrast
     interiorLight.position.set(-1, 1, -2); // Position inside the cofre
     interiorLight.castShadow = true;
     scene.add(interiorLight);
 
-    // Coin spotlight - illuminates falling coins
-    coinSpotlight = new THREE.SpotLight(0xffd700, 0, 25, Math.PI * 0.4, 0.5); // Gold spotlight
-    coinSpotlight.position.set(-1, 3, -2); // Above the cofre
-    coinSpotlight.target.position.set(-1, 0, -2); // Target inside cofre
+    // Coin spotlight - illuminates falling coins specifically
+    coinSpotlight = new THREE.SpotLight(0x00ffff, 0, 25, Math.PI * 0.3, 0.5); // Cyan spotlight for coins
+    coinSpotlight.position.set(-1, 4, -2); // Above the cofre
+    coinSpotlight.target.position.set(-1, 0, -2); // Target where coins fall
     coinSpotlight.castShadow = true;
     scene.add(coinSpotlight);
     scene.add(coinSpotlight.target);
 
-    // Additional warm light to enhance the "treasure" effect
-    const treasureGlow = new THREE.PointLight(0xffaa00, 0, 10); // Warm orange glow
-    treasureGlow.position.set(-1, 0.5, -2); // Inside cofre, lower position
-    scene.add(treasureGlow);
+    // Additional coin glow light
+    const coinGlow = new THREE.PointLight(0x00ffff, 0, 3); // Cyan glow for coins
+    coinGlow.position.set(-1, 1.5, -2); // Inside cofre, focused on coin area
+    scene.add(coinGlow);
 
     // Store reference for animation control
-    window.treasureGlow = treasureGlow; // Make it accessible
+    window.treasureGlow = coinGlow; // Make it accessible
 
     // Post-processing
     composer = new EffectComposer(renderer);

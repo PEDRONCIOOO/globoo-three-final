@@ -122,6 +122,12 @@ strong {
   justify-content: center;
 }
 
+.download-wrapper-2{
+  display: flex;
+  position: relative;
+  left: 30px;
+}
+
 .apple img, .android img{
   width: 150px;
   cursor: pointer;
@@ -617,7 +623,81 @@ footer {
   margin: 0 auto;
 }
 
-/* Mobile Responsive */
+/* About Hero Section - Left positioned, doesn't block 3D model */
+.section-about-hero {
+  position: absolute;
+  left: 20%;
+  top: 0;
+  width: 50%; /* Only takes left half */
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 4em;
+  pointer-events: none; /* Allows clicks to pass through to 3D model */
+  z-index: 200; /* Increased z-index */
+}
+
+.hero-content-left {
+  max-width: 500px;
+  pointer-events: all; /* Re-enable clicks only for content */
+  padding: 20px; /* DEBUG: Add some padding */
+}
+
+.hero-content-left h1 {
+  color: white !important; /* Force white color */
+  font-size: 4em;
+  font-weight: 200;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  line-height: 0.9em;
+  margin-bottom: 30px;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8); /* DEBUG: Add shadow for visibility */
+}
+
+.hero-content-left h1 strong {
+  color: #4290c8 !important;
+  font-weight: 500;
+}
+
+.hero-content-left p {
+  color: #b8d4e3 !important; /* Force color */
+  font-size: 1.1em;
+  font-family: 'Roboto Flex', sans-serif;
+  font-weight: 300;
+  line-height: 1.6em;
+  margin-bottom: 40px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* DEBUG: Add shadow */
+}
+
+.hero-content-left p strong {
+  color: #4290c8 !important;
+}
+
+.cta-button {
+  background: linear-gradient(135deg, #4290c8 0%, #298ebd 100%) !important;
+  color: white !important;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-size: 0.9em;
+  font-weight: 600;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(66, 144, 200, 0.3);
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(66, 144, 200, 0.4);
+  background: linear-gradient(135deg, #5ba3d1 0%, #4290c8 100%);
+}
+
+/* Mobile responsive */
 @media only screen and (max-width: 1200px) {
   .main-wrapper {
     width: 100%;
@@ -734,5 +814,13 @@ footer {
   
   .feature-content p {
     font-size: 0.85em;
+  }
+
+  .hero-content-left {
+    max-width: 90%;
+  }
+  
+  .hero-content-left h1 {
+    font-size: 2.5em;
   }
 }
