@@ -39,18 +39,18 @@ function aboutCameraAnimation(camera = new PerspectiveCamera(), cofre = null) {
         camera.position,
         { x: 9, y: 1, z: -6 },
         {
-            x: 9, y: 1, z: 6, // Posição final da câmera
-            ease: "power2.inOut",
+            x: 7, y: 2, z: 1, // Posição final da câmera
+            ease: "power1.inOut",
             duration: 1,
             scrollTrigger: {
                 trigger: ".section-about-2",
                 start: "top bottom",
                 end: "top center",
-                scrub: 1,
+                scrub: 0.5,
                 onEnter: () => {
                     // Abrir cofre quando chegar na seção 2
                     if (animationState === 'closed') {
-                        setTimeout(() => triggerCofreAnimation('opening'), 500);
+                        setTimeout(() => triggerCofreAnimation('opening'), 700);
                     }
                 },
             },
@@ -61,13 +61,13 @@ function aboutCameraAnimation(camera = new PerspectiveCamera(), cofre = null) {
         { x: 0, y: 0, z: 0 },
         {
             x: -1, y: 0.5, z: -6, // Focar no cofre
-            ease: "power2.inOut",
+            ease: "power1.inOut",
             duration: 1,
             scrollTrigger: {
                 trigger: ".section-about-2",
                 start: "top bottom",
                 end: "top center",
-                scrub: 1,
+                scrub: 0.5,
             },
         },
         "<" // Executar ao mesmo tempo que a animação da câmera
