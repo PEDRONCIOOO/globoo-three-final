@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { initCryptocurrencyDisplay } from './coinmarket.js';
 
 import { initResizeEventListener } from './system/resize.js';
 import { createParticles } from './particles';
@@ -487,4 +488,10 @@ export function initAboutScene() {
     setTimeout(() => {
         hideLoader();
     }, 3000);
+
+    // Initialize cryptocurrency display
+    const cryptoDisplay = initCryptocurrencyDisplay();
+    
+    // Optional: Store reference for later use
+    window.cryptoDisplay = cryptoDisplay;
 }
