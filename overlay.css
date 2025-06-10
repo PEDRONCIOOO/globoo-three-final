@@ -398,173 +398,105 @@ header ul li:hover {
   color: white;
 }
 
-/* SECTION 3 */
+/* SECTION 3 - WRAPPER STICKY, CARDS COMPRIMINDO */
 .section-3 {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 4rem 6rem;
-  gap: 4rem;
-  margin-top: 10em;
-  min-height: 100vh;
+  display: block;
+  padding: 0;
+  min-height: 400vh;
   position: relative;
 }
 
 .numbers-title {
-  flex: 1;
-  max-width: 450px;
   position: sticky;
-  top: 15vh;
+  top: 20vh;
   z-index: 10;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 6rem;
+  max-width: 500px;
 }
 
 .numbers-title h2 {
   font-size: 3.5em;
   font-weight: 200;
-  letter-spacing: -0.05em;
-  text-transform: uppercase;
-  line-height: 0.9em;
-  padding: 0;
-  margin-bottom: 30px;
   color: white;
+  margin-bottom: 30px;
 }
 
 .numbers-title strong {
   color: #4290c8;
-  font-weight: 600;
 }
 
 .numbers-title p {
   color: #b8d4e3;
   font-size: 1.2em;
-  font-family: 'Roboto Flex', sans-serif;
-  font-weight: 300;
   line-height: 1.6em;
-  margin: 0;
 }
 
 .card-wrapper {
-  flex: 1;
+  position: sticky;
+  top: 20vh;
+  z-index: 5;
+  height: 60vh;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  max-width: 500px;
-  padding-left: 2rem;
+  align-items: center;
+  justify-content: center;
+  padding-top: 100vh;
 }
 
 .card {
-  background: linear-gradient(135deg, rgba(66, 144, 200, 0.1) 0%, rgba(41, 142, 189, 0.05) 100%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 400px;
+  width: 400px;
+  max-width: 90%;
+  background: rgba(66, 144, 200, 0.1);
+  border: 1px solid rgba(66, 144, 200, 0.3);
   border-radius: 20px;
-  border: 1px solid rgba(66, 144, 200, 0.2);
-  backdrop-filter: blur(10px) saturate(2) contrast(1.3);
-  padding: 3rem 2rem;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  height: 450px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  opacity: 0;
-  transform: translateY(60px);
-}
-
-.card.visible {
+  transition: all 0.3s ease;
   opacity: 1;
-  transform: translateY(0);
-}
-
-.card.compressed {
-  height: 160px;
-  padding: 1.5rem;
+  scale: 1;
 }
 
 .card-title {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   margin-bottom: 20px;
-  transition: all 0.4s ease;
 }
 
 .card-title img {
-  width: 28px;
-  height: 28px;
-  transition: all 0.4s ease;
-  filter: brightness(0) saturate(100%) invert(70%) sepia(98%) saturate(4577%) hue-rotate(85deg) brightness(118%) contrast(119%);
-}
-
-.card.compressed .card-title img {
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
 }
 
 .card-title h2 {
   font-size: 1.8em;
-  font-weight: 500;
-  letter-spacing: -0.06em;
-  line-height: 1em;
+  color: white;
   margin: 0;
-  color: #ffffff;
-  transition: all 0.4s ease;
-}
-
-.card.compressed .card-title h2 {
-  font-size: 1.4em;
 }
 
 .card p {
-  color: #ffffff;
+  color: white;
   font-size: 1.1em;
-  font-family: 'Roboto Flex', sans-serif;
-  font-weight: 300;
   line-height: 1.6em;
   margin: 0;
-  transition: all 0.4s ease;
-  opacity: 1;
 }
 
-.card.compressed p {
-  font-size: 0.95em;
-  opacity: 0.8;
-  line-height: 1.4em;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(66, 144, 200, 0.1), transparent);
-  transition: left 0.6s ease;
-}
-
-.card:hover::before {
-  left: 100%;
-}
-
-.card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(66, 144, 200, 0.4);
-  box-shadow: 0 20px 40px rgba(66, 144, 200, 0.25);
-}
-
-.card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #4290c8, #00d4ff);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.card:hover::after {
-  opacity: 1;
+/* Estados de animação para compressão */
+.card.compressed {
+  scale: 0.8;
+  opacity: 0.3;
+  filter: blur(2px);
 }
 
 /* SECTION 4 */

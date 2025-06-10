@@ -1,5 +1,5 @@
 export function initCardsAnimation() {
-  function handleCardAnimation() {
+  function handleStickyCardsAnimation() {
     const cards = document.querySelectorAll('.section-3 .card');
     const section3 = document.querySelector('.section-3');
     
@@ -10,47 +10,36 @@ export function initCardsAnimation() {
     const sectionHeight = sectionRect.height;
     const windowHeight = window.innerHeight;
     
-    const sectionInView = sectionTop < windowHeight && (sectionTop + sectionHeight) > 0;
-    
-    if (!sectionInView) return;
-    
-    const scrollProgress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight * 2)));
+    // Progresso simples
+    const scrollProgress = Math.max(0, Math.min(1, -sectionTop / (sectionHeight - windowHeight)));
     
     cards.forEach((card, index) => {
-      const delay = index * 0.15;
-      const cardProgress = Math.max(0, Math.min(1, (scrollProgress - delay) / (1 - delay)));
+      // Cards diminuem altura em sequência
+      const cardStart = index * 0.01;
+      const cardEnd = cardStart + 0.25;
+      
+      const cardProgress = Math.max(0, Math.min(1, (scrollProgress - cardStart) / (cardEnd - cardStart)));
       
       if (cardProgress > 0) {
-        card.classList.add('visible');
-      }
-      
-      if (scrollProgress > 0.4 + (index * 0.1)) {
-        card.classList.add('compressed');
+        // Apenas diminuir altura
+        const heightScale = 1 - (cardProgress * 0.7); // Reduz até 30% da altura
+        const newHeight = 400 * heightScale; // Altura base de 400px
+        
+        card.style.transform = `translate(-50%, -50%)`;
+        card.style.height = `${newHeight}px`;
+        card.style.opacity = '1';
+        card.style.filter = 'none';
       } else {
-        card.classList.remove('compressed');
+        // Reset - altura normal
+        card.style.transform = 'translate(-50%, -50%)';
+        card.style.height = '400px';
+        card.style.opacity = '1';
+        card.style.filter = 'none';
       }
-      
-      const scale = 1 - (cardProgress * 0.02);
-      const rotateY = cardProgress * 2;
-      
-      card.style.transform = `
-        translateY(${(1 - cardProgress) * 40}px) 
-        scale(${scale}) 
-        rotateY(${rotateY}deg)
-      `;
     });
   }
 
-  let animationFrame;
-  function throttledCardAnimation() {
-    if (animationFrame) return;
-    animationFrame = requestAnimationFrame(() => {
-      handleCardAnimation();
-      animationFrame = null;
-    });
-  }
-
-  window.addEventListener('scroll', throttledCardAnimation);
-  window.addEventListener('load', handleCardAnimation);
-  window.addEventListener('resize', handleCardAnimation);
+  // Event listeners
+  window.addEventListener('scroll', handleStickyCardsAnimation);
+  window.addEventListener('load', handleStickyCardsAnimation);
 }

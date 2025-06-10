@@ -83,7 +83,7 @@ function aboutCameraAnimation(camera = new PerspectiveCamera(), cofre = null) {
                 trigger: ".section-about-4",
                 start: "top center",
                 end: "top top",
-                scrub: 0.5,
+                scrub: 3,
                 onLeaveBack: () => {
                     // Fechar cofre quando voltar para a seção 1
                     if (animationState === 'opening') {
@@ -104,7 +104,7 @@ function aboutCameraAnimation(camera = new PerspectiveCamera(), cofre = null) {
                 trigger: ".section-about-4",
                 start: "top center",
                 end: "top top",
-                scrub: 0.5,
+                scrub: 3,
             },
         }
     )
