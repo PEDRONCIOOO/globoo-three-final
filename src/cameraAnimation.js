@@ -156,19 +156,19 @@ function cameraAnimation(camera = new PerspectiveCamera()) {
             },
         }
     )
-    // Fade out section-3 when entering section-4
-    .to(
-        ".section-3",
-        {
-            opacity: 0.3,
-            scrollTrigger: {
-                trigger: ".section-4",
-                start: "top 80%",
-                end: "top 60%",
-                scrub: 0.5,
-            },
-        }
-    )
+    // // Fade out section-3 when entering section-4
+    // .to(
+    //     ".section-3",
+    //     {
+    //         opacity: 0.3,
+    //         scrollTrigger: {
+    //             trigger: ".section-4",
+    //             start: "top 80%",
+    //             end: "top 60%",
+    //             scrub: 0.5,
+    //         },
+    //     }
+    // )
     // Animate section-4 content in
     .fromTo(
         ".section-4 .wrapper",

@@ -72,6 +72,42 @@ function aboutCameraAnimation(camera = new PerspectiveCamera(), cofre = null) {
         },
         "<" // Executar ao mesmo tempo que a animação da câmera
     )
+    .fromTo(
+        cameraTarget,
+        { x: -1, y: 0.5, z: -6 },
+        {
+            x: 0, y: 0, z: 0, // Voltar ao foco original
+            ease: "power1.inOut",
+            duration: 1,
+            scrollTrigger: {
+                trigger: ".section-about-4",
+                start: "top center",
+                end: "top top",
+                scrub: 0.5,
+                onLeaveBack: () => {
+                    // Fechar cofre quando voltar para a seção 1
+                    if (animationState === 'opening') {
+                        setTimeout(() => triggerCofreAnimation('closing'), 700);
+                    }
+                },
+            },
+        }
+    )
+    .fromTo(
+        camera.position,
+        { x: 7, y: 2, z: 1 },
+        {
+            x: 9, y: 1, z: -6, // Voltar para a posição inicial
+            ease: "power1.inOut",
+            duration: 1,
+            scrollTrigger: {
+                trigger: ".section-about-4",
+                start: "top center",
+                end: "top top",
+                scrub: 0.5,
+            },
+        }
+    )
 
     // Fade out da seção 1
     .to(

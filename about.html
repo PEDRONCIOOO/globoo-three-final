@@ -69,46 +69,45 @@
             </ul>
           </div>
         </section>
-        
-        <!-- FOOTER -->
+   
       </div>
 
       <!-- SECAO 3: COINMARKETCAP API-->
       <section class="section-about-3">
-  <div class="wrapper">
-    <div class="crypto-header-panel">
-      <h2>Mercado em <strong>Movimento</strong></h2>
-      <p>Acompanhe os preços atualizados das principais criptomoedas do mercado.</p>
-      <button id="refresh-btn" class="refresh-button">
-        <span class="refresh-icon">🔄</span>
-        Atualizar Preços
-      </button>
-    </div>
-    
-    <div id="crypto-loading" class="crypto-loading">
-      <div class="loading-spinner"></div>
-      <p>Carregando dados das criptomoedas...</p>
-    </div>
-    
-    <div id="crypto-panel" class="crypto-panel" style="display: none;">
-      <div class="crypto-panel-header">
-        <div class="header-rank">#</div>
-        <div class="header-coin">Moeda</div>
-        <div class="header-price">Preço</div>
-        <div class="header-change">24h</div>
-        <div class="header-market-cap">Market Cap</div>
+      <div class="wrapper">
+        <div class="crypto-header-panel">
+          <h2>Mercado em <strong>Movimento</strong></h2>
+          <p>Acompanhe os preços atualizados das principais criptomoedas do mercado.</p>
+          <button id="refresh-btn" class="refresh-button">
+            <span class="refresh-icon">🔄</span>
+            Atualizar Preços
+          </button>
+        </div>
+        
+        <div id="crypto-loading" class="crypto-loading">
+          <div class="loading-spinner"></div>
+          <p>Carregando dados das criptomoedas...</p>
+        </div>
+        
+        <div id="crypto-panel" class="crypto-panel" style="display: none;">
+          <div class="crypto-panel-header">
+            <div class="header-rank">#</div>
+            <div class="header-coin">Moeda</div>
+            <div class="header-price">Preço</div>
+            <div class="header-change">24h</div>
+            <div class="header-market-cap">Market Cap</div>
+          </div>
+          <div id="crypto-list" class="crypto-list">
+            <!-- Cryptocurrency rows will be populated here -->
+          </div>
+        </div>
+        
+        <div id="crypto-error" class="crypto-error" style="display: none;">
+          <p>Erro ao carregar dados das criptomoedas. Tente novamente mais tarde.</p>
+          <button id="retry-btn" class="retry-button">Tentar Novamente</button>
+        </div>
       </div>
-      <div id="crypto-list" class="crypto-list">
-        <!-- Cryptocurrency rows will be populated here -->
-      </div>
-    </div>
-    
-    <div id="crypto-error" class="crypto-error" style="display: none;">
-      <p>Erro ao carregar dados das criptomoedas. Tente novamente mais tarde.</p>
-      <button id="retry-btn" class="retry-button">Tentar Novamente</button>
-    </div>
-  </div>
-</section>
+      </section>
 
       <section class="section-about-4">
         <div class="wrapper-final-crypto">
@@ -120,30 +119,30 @@
           <div class="text-down"><span>crie sua conta. <strong>é grátis!</strong></span></div>
         </div>
       </section>
-      <footer>
-      <div class="footer-left">
-        <h3>The time is now</h3>
-        <p>The path is forward</p>
-        <div class="social">
-          <img src="instagram.svg" alt="Instagram" width="30" />
-          <img src="youtube.svg" alt="YouTube" width="30" />
-          <img src="linkedin.svg" alt="LinkedIn" width="30" />
-        </div>
-        <p class="copyright">
-          Copyright &copy; andersonmancini.dev. All rights reserved.
-        </p>
-      </div>
-      <div class="footer-right">
-        <img src="brand.svg" alt="Brand Logo" width="60" />
 
-        <ul>
-          <li>Privacy policy</li>
-          <li>Terms of service</li>
-          <li>Cookie policy</li>
-          <li>Disclaimer</li>
-        </ul>
-      </div>
-    </footer>
+       <footer>
+        <div class="footer-left">
+          <h3>Globoo</h3>
+          <div class="social">
+            <img src="instagram.svg" alt="Instagram" width="30" />
+            <img src="youtube.svg" alt="YouTube" width="30" />
+            <img src="linkedin.svg" alt="LinkedIn" width="30" />
+          </div>
+          <p class="copyright">
+            Copyright &copy; Globoo. All rights reserved.
+          </p>
+        </div>
+        <div class="footer-right">
+          <img src="logo-globoo.png" alt="Brand Logo" width="120" />
+
+          <ul>
+            <li>Política de Privacidade</li>
+            <li>Política de Cookies</li>
+            <li>Termos de Serviço</li>
+            <li>Suporte</li>
+          </ul>
+        </div>
+      </footer>
 
       <div class="loader-container">
         <div class="loader"></div>

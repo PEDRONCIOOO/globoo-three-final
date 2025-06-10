@@ -226,6 +226,14 @@
         </section>
 
         <section class="section section-3">
+          <div class="numbers-title">
+            <h2>ENTENDEMOS O QUE <strong>VOCÊ</strong> PRECISA COM NÚMEROS</h2>
+            <p>
+              Em análises de mercado, a Globoo.io tem demonstrado resultados
+              extraordinários. Nossa tecnologia inovadora está se tornando
+              referência em segurança cripto e gestão de ativos digitais.
+            </p>
+          </div>
           <div class="card-wrapper">
             <div class="card">
               <div class="card-title">
@@ -257,14 +265,6 @@
                 agilidade e a confiança do sistema financeiro digital.
               </p>
             </div>
-          </div>
-          <div class="numbers-title">
-            <h2>ENTENDEMOS O QUE <strong>VOCÊ</strong> PRECISA COM NÚMEROS</h2>
-            <p>
-              Em análises de mercado, a Globoo.io tem demonstrado resultados
-              extraordinários. Nossa tecnologia inovadora está se tornando
-              referência em segurança cripto e gestão de ativos digitais.
-            </p>
           </div>
         </section>
 
@@ -317,25 +317,24 @@
 
       <footer>
         <div class="footer-left">
-          <h3>The time is now</h3>
-          <p>The path is forward</p>
+          <h3>Globoo</h3>
           <div class="social">
             <img src="instagram.svg" alt="Instagram" width="30" />
             <img src="youtube.svg" alt="YouTube" width="30" />
             <img src="linkedin.svg" alt="LinkedIn" width="30" />
           </div>
           <p class="copyright">
-            Copyright &copy; andersonmancini.dev. All rights reserved.
+            Copyright &copy; Globoo. All rights reserved.
           </p>
         </div>
         <div class="footer-right">
-          <img src="brand.svg" alt="Brand Logo" width="60" />
+          <img src="logo-globoo.png" alt="Brand Logo" width="120" />
 
           <ul>
-            <li>Privacy policy</li>
-            <li>Terms of service</li>
-            <li>Cookie policy</li>
-            <li>Disclaimer</li>
+            <li>Política de Privacidade</li>
+            <li>Política de Cookies</li>
+            <li>Termos de Serviço</li>
+            <li>Suporte</li>
           </ul>
         </div>
       </footer>
@@ -401,6 +400,70 @@
       document.addEventListener("mouseup", () => {
         cursor.classList.remove("cursor-click");
       });
+
+      // ANIMAÇÃO DOS CARDS NA SEÇÃO 3 - Substituir a função existente
+      function handleCardAnimation() {
+        const cards = document.querySelectorAll('.section-3 .card');
+        const section3 = document.querySelector('.section-3');
+        
+        if (!section3 || cards.length === 0) return;
+        
+        const sectionRect = section3.getBoundingClientRect();
+        const sectionTop = sectionRect.top;
+        const sectionHeight = sectionRect.height;
+        const windowHeight = window.innerHeight;
+        
+        // Verificar se a seção está visível
+        const sectionInView = sectionTop < windowHeight && (sectionTop + sectionHeight) > 0;
+        
+        if (!sectionInView) return;
+        
+        // Calcular o progresso do scroll dentro da seção
+        const scrollProgress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight * 2)));
+        
+        cards.forEach((card, index) => {
+          // Delay diferente para cada card (efeito stagger)
+          const delay = index * 0.15;
+          const cardProgress = Math.max(0, Math.min(1, (scrollProgress - delay) / (1 - delay)));
+          
+          // Animação de entrada
+          if (cardProgress > 0) {
+            card.classList.add('visible');
+          }
+          
+          // Animação de compressão
+          if (scrollProgress > 0.4 + (index * 0.1)) {
+            card.classList.add('compressed');
+          } else {
+            card.classList.remove('compressed');
+          }
+          
+          // Suavizar a transição com CSS custom properties
+          const scale = 1 - (cardProgress * 0.02); // Leve redução de escala
+          const rotateY = cardProgress * 2; // Leve rotação 3D
+          
+          card.style.transform = `
+            translateY(${(1 - cardProgress) * 40}px) 
+            scale(${scale}) 
+            rotateY(${rotateY}deg)
+          `;
+        });
+      }
+
+      // Throttle para melhor performance
+      let animationFrame;
+      function throttledCardAnimation() {
+        if (animationFrame) return;
+        animationFrame = requestAnimationFrame(() => {
+          handleCardAnimation();
+          animationFrame = null;
+        });
+      }
+
+      // Event listeners
+      window.addEventListener('scroll', throttledCardAnimation);
+      window.addEventListener('load', handleCardAnimation);
+      window.addEventListener('resize', handleCardAnimation);
     </script>
 
     <script type="module" src="/main.js"></script>
