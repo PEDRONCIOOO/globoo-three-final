@@ -17,19 +17,67 @@
     </div>
     
     <div class="container">
+      <!-- Header -->
+      <header>
+        <div class="brand">
+          <img src="/logo-globoo.png" alt="Globoo" width="100px" />
+        </div>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li class="services-dropdown">
+            <a href="#" id="services-trigger">
+              Serviços
+              <span class="dropdown-arrow">▼</span>
+            </a>
+            <div class="services-modal" id="services-modal">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3>Nossos Serviços</h3>
+                  <p>Escolha o serviço que mais se adequa às suas necessidades</p>
+                </div>
+                <div class="services-grid">
+                  <a href="/about.html" class="service-card">
+                    <div class="service-icon">₿</div>
+                    <h4>Criptomoedas</h4>
+                    <p>Negocie Bitcoin, Ethereum e outras moedas digitais</p>
+                  </a>
+                  <a href="/banking.html" class="service-card">
+                    <div class="service-icon">🏦</div>
+                    <h4>Banco Digital</h4>
+                    <p>Conta digital completa com cartão e PIX gratuito</p>
+                  </a>
+                  <a href="/tokens.html" class="service-card">
+                    <div class="service-icon">💎</div>
+                    <h4>Tokens NFT</h4>
+                    <p>Crie, compre e venda tokens não fungíveis</p>
+                  </a>
+                  <a href="/community.html" class="service-card">
+                    <div class="service-icon">👥</div>
+                    <h4>Community</h4>
+                    <p>Participe da comunidade e ganhe recompensas</p>
+                  </a>
+                  <a href="/crowdfunding.html" class="service-card">
+                    <div class="service-icon">📊</div>
+                    <h4>Crowdfunding</h4>
+                    <p>Financie projetos ou lance suas campanhas</p>
+                  </a>
+                  <a href="/staking.html" class="service-card">
+                    <div class="service-icon">⚡</div>
+                    <h4>Staking</h4>
+                    <p>Ganhe rendimentos com suas criptomoedas</p>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+        <button>BAIXAR APP</button>
+      </header>
+
+      <!-- Modal Overlay -->
+      <div class="modal-overlay" id="modal-overlay"></div>
       <div class="main-wrapper">
-        <!-- Header -->
-        <header>
-          <div class="brand">
-            <img src="/logo-globoo.png" alt="Globoo" width="100px" />
-          </div>
-          <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about.html">Serviços</a></li>
-            <li><a href="#contato">Contato</a></li>
-          </ul>
-          <button>BAIXAR APP</button>
-        </header>
         
         <!-- SEÇÃO 1: Hero -->
         <section class="section section-about-1">
@@ -149,6 +197,7 @@
       </div>
     </div>
 
+
     <!-- Cursor script -->
     <script>
       const cursor = document.querySelector(".cursor");
@@ -202,6 +251,90 @@
 
       document.addEventListener("mouseup", () => {
         cursor.classList.remove("cursor-click");
+      });
+
+      // SERVICES MODAL DROPDOWN
+      document.addEventListener('DOMContentLoaded', function() {
+        const servicesTrigger = document.getElementById('services-trigger');
+        const servicesModal = document.getElementById('services-modal');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const servicesDropdown = document.querySelector('.services-dropdown');
+        
+        let isModalOpen = false;
+
+        // Função para abrir modal
+        function openModal() {
+          if (!isModalOpen) {
+            isModalOpen = true;
+            servicesDropdown.classList.add('active');
+            servicesModal.classList.add('active');
+            modalOverlay.classList.add('active');
+            
+            // Animar cards individualmente
+            const serviceCards = document.querySelectorAll('.service-card');
+            serviceCards.forEach((card, index) => {
+              setTimeout(() => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+              }, 0);
+            });
+          }
+        }
+
+        // Função para fechar modal
+        function closeModal() {
+          if (isModalOpen) {
+            isModalOpen = false;
+            servicesDropdown.classList.remove('active');
+            servicesModal.classList.remove('active');
+            modalOverlay.classList.remove('active');
+            
+            // Reset transition delays
+            const serviceCards = document.querySelectorAll('.service-card');
+            serviceCards.forEach(card => {
+              card.style.transitionDelay = '0s';
+            });
+          }
+        }
+
+        // Event listeners
+        if (servicesTrigger) {
+          servicesTrigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (isModalOpen) {
+              closeModal();
+            } else {
+              openModal();
+            }
+          });
+        }
+
+        // Fechar ao clicar no overlay
+        if (modalOverlay) {
+          modalOverlay.addEventListener('click', closeModal);
+        }
+
+        // Fechar com ESC
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && isModalOpen) {
+            closeModal();
+          }
+        });
+
+        // Fechar ao clicar fora do modal
+        document.addEventListener('click', (e) => {
+          if (isModalOpen && 
+              servicesModal && !servicesModal.contains(e.target) && 
+              servicesTrigger && !servicesTrigger.contains(e.target)) {
+            closeModal();
+          }
+        });
+
+        // Prevenir fechamento ao clicar dentro do modal
+        if (servicesModal) {
+          servicesModal.addEventListener('click', (e) => {
+            e.stopPropagation();
+          });
+        }
       });
     </script>
 

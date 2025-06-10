@@ -21,11 +21,59 @@
         </div>
         <ul>
           <li><a href="/">Home</a></li>
-          <li><a href="/about.html">Serviços</a></li>
+          <li class="services-dropdown">
+            <a href="#" id="services-trigger">
+              Serviços
+              <span class="dropdown-arrow">▼</span>
+            </a>
+            <div class="services-modal" id="services-modal">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3>Nossos Serviços</h3>
+                  <p>Escolha o serviço que mais se adequa às suas necessidades</p>
+                </div>
+                <div class="services-grid">
+                  <a href="/about.html" class="service-card">
+                    <div class="service-icon">₿</div>
+                    <h4>Criptomoedas</h4>
+                    <p>Negocie Bitcoin, Ethereum e outras moedas digitais</p>
+                  </a>
+                  <a href="/banking.html" class="service-card">
+                    <div class="service-icon">🏦</div>
+                    <h4>Banco Digital</h4>
+                    <p>Conta digital completa com cartão e PIX gratuito</p>
+                  </a>
+                  <a href="/tokens.html" class="service-card">
+                    <div class="service-icon">💎</div>
+                    <h4>Tokens NFT</h4>
+                    <p>Crie, compre e venda tokens não fungíveis</p>
+                  </a>
+                  <a href="/community.html" class="service-card">
+                    <div class="service-icon">👥</div>
+                    <h4>Community</h4>
+                    <p>Participe da comunidade e ganhe recompensas</p>
+                  </a>
+                  <a href="/crowdfunding.html" class="service-card">
+                    <div class="service-icon">📊</div>
+                    <h4>Crowdfunding</h4>
+                    <p>Financie projetos ou lance suas campanhas</p>
+                  </a>
+                  <a href="/staking.html" class="service-card">
+                    <div class="service-icon">⚡</div>
+                    <h4>Staking</h4>
+                    <p>Ganhe rendimentos com suas criptomoedas</p>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
           <li><a href="#contato">Contato</a></li>
         </ul>
         <button>BAIXAR APP</button>
       </header>
+
+      <!-- Modal Overlay -->
+      <div class="modal-overlay" id="modal-overlay"></div>
 
       <div class="main-wrapper">
         <section class="section section-1">
@@ -269,44 +317,159 @@
         </section>
 
         <section class="section section-4">
-          <div class="wrapper data-wrapper">
-            <h1><strong>VOCÊ MERECE</strong> ESSA EVOLUÇÃO</h1>
-            <div class="couple">
-              <div class="people-wrap">
-                <img src="/mulher.png" alt="Pessoas usando criptoativos" />
-                <img src="/véio.png" alt="Pessoas usando criptoativos" />
-                <img src="/homem.png" alt="Pessoas usando criptoativos" />
-                <img src="/fazendeira.png" alt="Pessoas usando criptoativos" />
+        <div class="stats-container">
+          <h1><strong>VOCÊ MERECE</strong> ESSA EVOLUÇÃO</h1>
+          <div class="stats-grid">
+            <div class="stat-box" data-target="24" data-suffix="%">
+              <div class="stat-number">0</div>
+              <div class="stat-text">
+                <p>DA POPULAÇÃO BRASILEIRA</p>
+                <span>já movimenta algum criptoativo</span>
               </div>
-              <div class="deserve-wrap">
-                <div class="box-percentage">
-                  <h2>24%</h2>
-                  <div class="box-text">
-                    <p>DA POPULAÇÃO BRASILEIRA</p>
-                    <span>já movimenta algum criptoativo</span>
+            </div>
+            <div class="stat-box" data-target="46" data-suffix="%">
+              <div class="stat-number">0</div>
+              <div class="stat-text">
+                <p>É O AUMENTO DE CONTAS DIGITAIS</p>
+                <span>abertas entre 2023 e 2024</span>
+              </div>
+            </div>
+            <div class="stat-box" data-target="248" data-suffix="">
+              <div class="stat-number">0</div>
+              <div class="stat-text">
+                <p>BILHÕES DE REAIS EM CRIPTO</p>
+                <span>foram movimentados em 2024</span>
+              </div>
+            </div>
+            <div class="stat-box" data-target="50" data-suffix="%">
+              <div class="stat-number">0</div>
+              <div class="stat-text">
+                <p>DA POPULAÇÃO</p>
+                <span>deve ter saldo ou investimentos em cripto até 2030</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        </section>
+
+        <section class="section section-5">
+          <div class="faq-container">
+            <div class="faq-header">
+              <h1>PERGUNTAS <strong>FREQUENTES</strong></h1>
+              <p>Encontre aqui as respostas para as perguntas mais comuns sobre o mundo financeiro digital.</p>
+            </div>
+            
+            <div class="faq-grid">
+              <div class="faq-item" data-faq="1">
+                <div class="faq-question">
+                  <h3>O que é uma criptomoeda?</h3>
+                  <div class="faq-icon">
+                    <span class="plus">+</span>
+                    <span class="minus">−</span>
                   </div>
                 </div>
-                <div class="box-percentage">
-                  <h2>46%</h2>
-                  <div class="box-text">
-                    <p>É O AUMENTO DE CONTAS DIGITAIS</p>
-                    <span>abertas entre 2023 e 2024</span>
+                <div class="faq-answer">
+                  <div class="answer-content">
+                    <p>
+                      Criptomoedas são moedas digitais que utilizam criptografia avançada para
+                      garantir transações seguras e controlar a criação de novas unidades. Elas operam
+                      de forma descentralizada, sem necessidade de bancos centrais.
+                    </p>
                   </div>
                 </div>
-                <div class="box-percentage">
-                  <h2>248</h2>
-                  <div class="box-text">
-                    <p>BILHÕES DE REAIS EM CRIPTO</p>
-                    <span>foram movimentados em 2024</span>
+              </div>
+
+              <div class="faq-item" data-faq="2">
+                <div class="faq-question">
+                  <h3>Como posso comprar criptomoedas na Globoo?</h3>
+                  <div class="faq-icon">
+                    <span class="plus">+</span>
+                    <span class="minus">−</span>
                   </div>
                 </div>
-                <div class="box-percentage">
-                  <h2>50%</h2>
-                  <div class="box-text">
-                    <p>DA POPULAÇÃO</p>
-                    <span
-                      >deve ter saldo ou investimentos em cripto até 2030</span
-                    >
+                <div class="faq-answer">
+                  <div class="answer-content">
+                    <p>
+                      Na Globoo, você pode comprar criptomoedas facilmente através do nosso app.
+                      Aceita cartão de crédito, débito, PIX e transferência bancária. O processo
+                      é simples, rápido e totalmente seguro.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item" data-faq="3">
+                <div class="faq-question">
+                  <h3>Quais são os riscos de investir em criptomoedas?</h3>
+                  <div class="faq-icon">
+                    <span class="plus">+</span>
+                    <span class="minus">−</span>
+                  </div>
+                </div>
+                <div class="faq-answer">
+                  <div class="answer-content">
+                    <p>
+                      Os principais riscos incluem alta volatilidade de preços, mudanças regulatórias
+                      e riscos tecnológicos. Na Globoo, oferecemos ferramentas de gestão de risco
+                      e educação financeira para minimizar esses riscos.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item" data-faq="4">
+                <div class="faq-question">
+                  <h3>Como funciona o blockchain?</h3>
+                  <div class="faq-icon">
+                    <span class="plus">+</span>
+                    <span class="minus">−</span>
+                  </div>
+                </div>
+                <div class="faq-answer">
+                  <div class="answer-content">
+                    <p>
+                      Blockchain é um livro-razão digital descentralizado que registra todas as
+                      transações de forma segura e transparente. Cada bloco contém informações
+                      criptografadas que garantem a integridade dos dados.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item" data-faq="5">
+                <div class="faq-question">
+                  <h3>A Globoo oferece suporte 24/7?</h3>
+                  <div class="faq-icon">
+                    <span class="plus">+</span>
+                    <span class="minus">−</span>
+                  </div>
+                </div>
+                <div class="faq-answer">
+                  <div class="answer-content">
+                    <p>
+                      Sim! Nossa equipe de suporte está disponível 24 horas por dia, 7 dias por semana.
+                      Você pode nos contatar via chat no app, WhatsApp, email ou telefone para
+                      qualquer dúvida ou problema.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item" data-faq="6">
+                <div class="faq-question">
+                  <h3>Como funciona o sistema de segurança da Globoo?</h3>
+                  <div class="faq-icon">
+                    <span class="plus">+</span>
+                    <span class="minus">−</span>
+                  </div>
+                </div>
+                <div class="faq-answer">
+                  <div class="answer-content">
+                    <p>
+                      Utilizamos criptografia de nível militar, autenticação de dois fatores,
+                      cold storage para fundos e auditoria de segurança constante. Seus ativos
+                      estão protegidos pelos mais altos padrões de segurança do mercado.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -377,7 +540,7 @@
 
       // Hover effects
       const hoverElements = document.querySelectorAll(
-        "button, a, .feature-item, .card"
+        "button, a, .feature-item, .card, .service-card"
       );
 
       hoverElements.forEach((element) => {
@@ -401,7 +564,85 @@
         cursor.classList.remove("cursor-click");
       });
 
-      // ANIMAÇÃO DOS CARDS NA SEÇÃO 3 - Substituir a função existente
+      // SERVICES MODAL DROPDOWN
+      document.addEventListener('DOMContentLoaded', function() {
+        const servicesTrigger = document.getElementById('services-trigger');
+        const servicesModal = document.getElementById('services-modal');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const servicesDropdown = document.querySelector('.services-dropdown');
+        
+        let isModalOpen = false;
+
+        // Função para abrir modal
+        function openModal() {
+          if (!isModalOpen) {
+            isModalOpen = true;
+            servicesDropdown.classList.add('active');
+            servicesModal.classList.add('active');
+            modalOverlay.classList.add('active');
+            
+            // Animar cards individualmente
+            const serviceCards = document.querySelectorAll('.service-card');
+            serviceCards.forEach((card, index) => {
+              setTimeout(() => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+              }, 0);
+            });
+          }
+        }
+
+        // Função para fechar modal
+        function closeModal() {
+          if (isModalOpen) {
+            isModalOpen = false;
+            servicesDropdown.classList.remove('active');
+            servicesModal.classList.remove('active');
+            modalOverlay.classList.remove('active');
+            
+            // Reset transition delays
+            const serviceCards = document.querySelectorAll('.service-card');
+            serviceCards.forEach(card => {
+              card.style.transitionDelay = '0s';
+            });
+          }
+        }
+
+        // Event listeners
+        servicesTrigger.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (isModalOpen) {
+            closeModal();
+          } else {
+            openModal();
+          }
+        });
+
+        // Fechar ao clicar no overlay
+        modalOverlay.addEventListener('click', closeModal);
+
+        // Fechar com ESC
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && isModalOpen) {
+            closeModal();
+          }
+        });
+
+        // Fechar ao clicar fora do modal
+        document.addEventListener('click', (e) => {
+          if (isModalOpen && 
+              !servicesModal.contains(e.target) && 
+              !servicesTrigger.contains(e.target)) {
+            closeModal();
+          }
+        });
+
+        // Prevenir fechamento ao clicar dentro do modal
+        servicesModal.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      });
+
+      // ANIMAÇÃO DOS CARDS NA SEÇÃO 3
       function handleCardAnimation() {
         const cards = document.querySelectorAll('.section-3 .card');
         const section3 = document.querySelector('.section-3');
@@ -413,34 +654,28 @@
         const sectionHeight = sectionRect.height;
         const windowHeight = window.innerHeight;
         
-        // Verificar se a seção está visível
         const sectionInView = sectionTop < windowHeight && (sectionTop + sectionHeight) > 0;
         
         if (!sectionInView) return;
         
-        // Calcular o progresso do scroll dentro da seção
         const scrollProgress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight * 2)));
         
         cards.forEach((card, index) => {
-          // Delay diferente para cada card (efeito stagger)
           const delay = index * 0.15;
           const cardProgress = Math.max(0, Math.min(1, (scrollProgress - delay) / (1 - delay)));
           
-          // Animação de entrada
           if (cardProgress > 0) {
             card.classList.add('visible');
           }
           
-          // Animação de compressão
           if (scrollProgress > 0.4 + (index * 0.1)) {
             card.classList.add('compressed');
           } else {
             card.classList.remove('compressed');
           }
           
-          // Suavizar a transição com CSS custom properties
-          const scale = 1 - (cardProgress * 0.02); // Leve redução de escala
-          const rotateY = cardProgress * 2; // Leve rotação 3D
+          const scale = 1 - (cardProgress * 0.02);
+          const rotateY = cardProgress * 2;
           
           card.style.transform = `
             translateY(${(1 - cardProgress) * 40}px) 
@@ -450,7 +685,6 @@
         });
       }
 
-      // Throttle para melhor performance
       let animationFrame;
       function throttledCardAnimation() {
         if (animationFrame) return;
@@ -460,10 +694,67 @@
         });
       }
 
-      // Event listeners
       window.addEventListener('scroll', throttledCardAnimation);
       window.addEventListener('load', handleCardAnimation);
       window.addEventListener('resize', handleCardAnimation);
+
+      // COUNTER ANIMATION SECTION 4
+function animateCounter(element, target, suffix = '') {
+  let current = 0;
+  const increment = target / 100; // Dividir em 100 passos
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= target) {
+      current = target;
+      clearInterval(timer);
+    }
+    element.textContent = Math.floor(current) + suffix;
+  }, 30); // 30ms entre cada update = ~3 segundos total
+}
+
+function handleStatsAnimation() {
+  const statsSection = document.querySelector('.section-4');
+  const statBoxes = document.querySelectorAll('.stat-box');
+  
+  if (!statsSection || statBoxes.length === 0) return;
+  
+  const sectionRect = statsSection.getBoundingClientRect();
+  const sectionTop = sectionRect.top;
+  const windowHeight = window.innerHeight;
+  
+  // Verificar se a seção está 60% visível
+  if (sectionTop < windowHeight * 0.6) {
+    statBoxes.forEach((box, index) => {
+      // Stagger animation - cada box anima com delay
+      setTimeout(() => {
+        if (!box.classList.contains('animate')) {
+          box.classList.add('animate');
+          
+          // Iniciar animação do número
+          const numberElement = box.querySelector('.stat-number');
+          const target = parseInt(box.dataset.target);
+          const suffix = box.dataset.suffix || '';
+          
+          animateCounter(numberElement, target, suffix);
+        }
+      }, index * 200); // 200ms de delay entre cada stat box
+    });
+  }
+}
+
+// Throttle para performance
+let statsAnimationFrame;
+function throttledStatsAnimation() {
+  if (statsAnimationFrame) return;
+  statsAnimationFrame = requestAnimationFrame(() => {
+    handleStatsAnimation();
+    statsAnimationFrame = null;
+  });
+}
+
+window.addEventListener('scroll', throttledStatsAnimation);
+window.addEventListener('load', handleStatsAnimation);
+window.addEventListener('resize', handleStatsAnimation);
     </script>
 
     <script type="module" src="/main.js"></script>
