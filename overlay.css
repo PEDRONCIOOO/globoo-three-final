@@ -577,17 +577,6 @@ header ul li:hover {
   position: relative;
 }
 
-.section-4::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(66, 144, 200, 0.1) 0%, transparent 70%);
-  pointer-events: none;
-}
-
 .stats-container {
   max-width: 1200px;
   width: 100%;
