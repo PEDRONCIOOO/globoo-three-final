@@ -76,16 +76,31 @@
       <!-- SECAO 3: COINMARKETCAP API-->
       <section class="section-about-3">
   <div class="wrapper">
-    <h2>Mercado em <strong>Movimento</strong></h2>
-    <p>Acompanhe os preços atualizados das principais criptomoedas do mercado. </p>
+    <div class="crypto-header-panel">
+      <h2>Mercado em <strong>Movimento</strong></h2>
+      <p>Acompanhe os preços atualizados das principais criptomoedas do mercado.</p>
+      <button id="refresh-btn" class="refresh-button">
+        <span class="refresh-icon">🔄</span>
+        Atualizar Preços
+      </button>
+    </div>
     
     <div id="crypto-loading" class="crypto-loading">
       <div class="loading-spinner"></div>
       <p>Carregando dados das criptomoedas...</p>
     </div>
     
-    <div id="crypto-grid" class="crypto-grid" style="display: none;">
-      <!-- Cryptocurrency cards will be populated here -->
+    <div id="crypto-panel" class="crypto-panel" style="display: none;">
+      <div class="crypto-panel-header">
+        <div class="header-rank">#</div>
+        <div class="header-coin">Moeda</div>
+        <div class="header-price">Preço</div>
+        <div class="header-change">24h</div>
+        <div class="header-market-cap">Market Cap</div>
+      </div>
+      <div id="crypto-list" class="crypto-list">
+        <!-- Cryptocurrency rows will be populated here -->
+      </div>
     </div>
     
     <div id="crypto-error" class="crypto-error" style="display: none;">
@@ -94,6 +109,17 @@
     </div>
   </div>
 </section>
+
+      <section class="section-about-4">
+        <div class="wrapper-final-crypto">
+          <div class="text-up">
+            <h1>Está esperando o quê? Seu futuro financeiro <strong>já começou.</strong></h1>
+            <p>Na Globoo, investir em criptomoedas é simples, seguro e vantajoso.</p>
+          </div>
+          
+          <div class="text-down"><span>crie sua conta. <strong>é grátis!</strong></span></div>
+        </div>
+      </section>
       <footer>
       <div class="footer-left">
         <h3>The time is now</h3>

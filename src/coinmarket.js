@@ -172,35 +172,73 @@ class CryptocurrencyAPI {
   }
 }
 
-// Cryptocurrency Display Manager
+// Cryptocurrency Display Manager - ATUALIZADO PARA PAINEL
 class CryptocurrencyDisplay {
   constructor() {
     this.api = new CryptocurrencyAPI();
     this.loadingElement = null;
-    this.gridElement = null;
+    this.panelElement = null;
+    this.listElement = null;
     this.errorElement = null;
     this.retryButton = null;
+    this.refreshButton = null;
     this.isInitialized = false;
+    this.isLoading = false;
   }
 
   // Initialize DOM elements
   init() {
     this.loadingElement = document.getElementById('crypto-loading');
-    this.gridElement = document.getElementById('crypto-grid');
+    this.panelElement = document.getElementById('crypto-panel');
+    this.listElement = document.getElementById('crypto-list');
     this.errorElement = document.getElementById('crypto-error');
     this.retryButton = document.getElementById('retry-btn');
+    this.refreshButton = document.getElementById('refresh-btn');
 
-    if (!this.loadingElement || !this.gridElement || !this.errorElement) {
+    if (!this.loadingElement || !this.panelElement || !this.listElement || !this.errorElement) {
       console.warn('Cryptocurrency DOM elements not found. Make sure the HTML structure is in place.');
       return false;
     }
 
+    // Event listeners
     this.retryButton?.addEventListener('click', () => this.loadCryptocurrencies());
+    this.refreshButton?.addEventListener('click', () => this.refreshData());
+    
     this.isInitialized = true;
     
     // Auto-load cryptocurrencies
     this.loadCryptocurrencies();
     return true;
+  }
+
+  async refreshData() {
+    if (this.isLoading) return;
+    
+    this.isLoading = true;
+    this.refreshButton.classList.add('loading');
+    this.refreshButton.innerHTML = '<span class="refresh-icon">🔄</span>Atualizando...';
+    
+    try {
+      const cryptocurrencies = await this.api.getTopCryptocurrencies(10);
+      this.displayCryptocurrencies(cryptocurrencies);
+      this.showPanel();
+      
+      // Success feedback
+      this.refreshButton.innerHTML = '<span class="refresh-icon">✅</span>Atualizado!';
+      setTimeout(() => {
+        this.refreshButton.innerHTML = '<span class="refresh-icon">🔄</span>Atualizar Preços';
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Error refreshing cryptocurrencies:', error);
+      this.refreshButton.innerHTML = '<span class="refresh-icon">❌</span>Erro ao atualizar';
+      setTimeout(() => {
+        this.refreshButton.innerHTML = '<span class="refresh-icon">🔄</span>Atualizar Preços';
+      }, 3000);
+    } finally {
+      this.isLoading = false;
+      this.refreshButton.classList.remove('loading');
+    }
   }
 
   async loadCryptocurrencies() {
@@ -214,7 +252,7 @@ class CryptocurrencyDisplay {
     try {
       const cryptocurrencies = await this.api.getTopCryptocurrencies(10);
       this.displayCryptocurrencies(cryptocurrencies);
-      this.showGrid();
+      this.showPanel();
     } catch (error) {
       console.error('Error loading cryptocurrencies:', error);
       this.showError();
@@ -222,19 +260,19 @@ class CryptocurrencyDisplay {
   }
 
   displayCryptocurrencies(cryptocurrencies) {
-    if (!this.gridElement) return;
+    if (!this.listElement) return;
     
-    this.gridElement.innerHTML = '';
+    this.listElement.innerHTML = '';
 
     cryptocurrencies.forEach(crypto => {
-      const card = this.createCryptoCard(crypto);
-      this.gridElement.appendChild(card);
+      const row = this.createCryptoRow(crypto);
+      this.listElement.appendChild(row);
     });
   }
 
-  createCryptoCard(crypto) {
-    const card = document.createElement('div');
-    card.className = 'crypto-card';
+  createCryptoRow(crypto) {
+    const row = document.createElement('div');
+    row.className = 'crypto-row';
 
     const price = crypto.quote.USD.price;
     const change = crypto.quote.USD.percent_change_24h;
@@ -243,36 +281,35 @@ class CryptocurrencyDisplay {
     const changeClass = change >= 0 ? 'positive' : 'negative';
     const changeArrow = change >= 0 ? '↗' : '↘';
 
-    card.innerHTML = `
-      <div class="crypto-header">
-        <img 
-          src="${this.api.getCryptoIconURL(crypto.id)}" 
-          alt="${crypto.name} icon" 
-          class="crypto-icon"
-          onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM0MjkwYzgiLz4KPHRleHQgeD0iMjAiIHk9IjI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9ImJvbGQiPiQ8L3RleHQ+Cjwvc3ZnPg=='"
-        />
-        <div class="crypto-info">
-          <h3>${crypto.name}</h3>
-          <div class="crypto-symbol">${crypto.symbol}</div>
+    row.innerHTML = `
+      <div class="row-rank">#${crypto.cmc_rank}</div>
+      
+      <div class="row-coin">
+        <div class="coin-info">
+          <img 
+            src="${this.api.getCryptoIconURL(crypto.id)}" 
+            alt="${crypto.name} icon" 
+            class="crypto-icon"
+            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiM0MjkwYzgiLz4KPHRleHQgeD0iMTYiIHk9IjIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9ImJvbGQiPiQ8L3RleHQ+Cjwvc3ZnPg=='"
+          />
+          <div class="coin-details">
+            <h4>${crypto.name}</h4>
+            <p class="coin-symbol">${crypto.symbol}</p>
+          </div>
         </div>
-        <div class="crypto-rank">#${crypto.cmc_rank}</div>
       </div>
       
-      <div class="crypto-price">
-        $${this.formatPrice(price)}
-      </div>
+      <div class="row-price">$${this.formatPrice(price)}</div>
       
-      <div class="crypto-change ${changeClass}">
+      <div class="row-change ${changeClass}">
         <span class="change-arrow">${changeArrow}</span>
         ${Math.abs(change).toFixed(2)}%
       </div>
       
-      <div class="crypto-market-cap">
-        <strong>Market Cap:</strong> $${this.formatMarketCap(marketCap)}
-      </div>
+      <div class="row-market-cap">$${this.formatMarketCap(marketCap)}</div>
     `;
 
-    return card;
+    return row;
   }
 
   formatPrice(price) {
@@ -300,27 +337,27 @@ class CryptocurrencyDisplay {
 
   showLoading() {
     if (this.loadingElement) this.loadingElement.style.display = 'flex';
-    if (this.gridElement) this.gridElement.style.display = 'none';
+    if (this.panelElement) this.panelElement.style.display = 'none';
     if (this.errorElement) this.errorElement.style.display = 'none';
   }
 
-  showGrid() {
+  showPanel() {
     if (this.loadingElement) this.loadingElement.style.display = 'none';
-    if (this.gridElement) this.gridElement.style.display = 'grid';
+    if (this.panelElement) this.panelElement.style.display = 'block';
     if (this.errorElement) this.errorElement.style.display = 'none';
   }
 
   showError() {
     if (this.loadingElement) this.loadingElement.style.display = 'none';
-    if (this.gridElement) this.gridElement.style.display = 'none';
+    if (this.panelElement) this.panelElement.style.display = 'none';
     if (this.errorElement) this.errorElement.style.display = 'block';
   }
 
   // Method to refresh data periodically
   startAutoRefresh(intervalMinutes = 5) {
     setInterval(() => {
-      if (this.isInitialized) {
-        this.loadCryptocurrencies();
+      if (this.isInitialized && !this.isLoading) {
+        this.refreshData();
       }
     }, intervalMinutes * 60 * 1000);
   }
@@ -328,6 +365,7 @@ class CryptocurrencyDisplay {
   // Clean up method
   destroy() {
     this.retryButton?.removeEventListener('click', () => this.loadCryptocurrencies());
+    this.refreshButton?.removeEventListener('click', () => this.refreshData());
     this.isInitialized = false;
   }
 }
