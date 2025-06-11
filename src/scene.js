@@ -41,7 +41,7 @@ function loadPillModel() {
 }
 
 function initScene() {
-    console.log('initScene');
+    console.log('Created with s2 by https://trotta.dev');
 
     const canvas = document.getElementById('webgl');
     initSizes(canvas);
@@ -102,7 +102,6 @@ function initScene() {
     
     // Load the GLB model as the main object
     loadPillModel().then((pillModel) => {
-        console.log('main model loaded', pillModel);
         mainModel.add(pillModel);
     }).catch((error) => {
         console.error('Error loading main model:', error);

@@ -171,7 +171,7 @@ function cameraAnimation(camera = new PerspectiveCamera()) {
     // )
     // Animate section-4 content in
     .fromTo(
-        ".section-4 .wrapper",
+        ".section-4",
         {
             opacity: 0,
             y: 50,

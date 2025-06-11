@@ -1,45 +1,44 @@
 export function initCardsAnimation() {
-  function handleStickyCardsAnimation() {
+  function handleCardsAnimation() {
+    const section = document.querySelector('.section-3');
     const cards = document.querySelectorAll('.section-3 .card');
-    const section3 = document.querySelector('.section-3');
     
-    if (!section3 || cards.length === 0) return;
-    
-    const sectionRect = section3.getBoundingClientRect();
+    if (!section || cards.length === 0) return;
+
+    const sectionRect = section.getBoundingClientRect();
     const sectionTop = sectionRect.top;
-    const sectionHeight = sectionRect.height;
     const windowHeight = window.innerHeight;
     
-    // Progresso simples
-    const scrollProgress = Math.max(0, Math.min(1, -sectionTop / (sectionHeight - windowHeight)));
-    
+    // Calculate overall scroll progress through section
+    const scrollProgress = Math.max(0, Math.min(1, 
+      (windowHeight - sectionTop) / (sectionRect.height)
+    ));
+
+    // Animate each card sequentially
     cards.forEach((card, index) => {
-      // Cards diminuem altura em sequência
-      const cardStart = index * 0.01;
-      const cardEnd = cardStart + 0.25;
+      // Each card animation takes 25% of the total scroll
+      const cardStartProgress = index * 0.25;
+      const cardEndProgress = cardStartProgress + 0.25;
       
-      const cardProgress = Math.max(0, Math.min(1, (scrollProgress - cardStart) / (cardEnd - cardStart)));
+      // Calculate this card's progress
+      const cardProgress = Math.max(0, Math.min(1,
+        (scrollProgress - cardStartProgress) / (cardEndProgress - cardStartProgress)
+      ));
       
-      if (cardProgress > 0) {
-        // Apenas diminuir altura
-        const heightScale = 1 - (cardProgress * 0.7); // Reduz até 30% da altura
-        const newHeight = 400 * heightScale; // Altura base de 400px
-        
-        card.style.transform = `translate(-50%, -50%)`;
-        card.style.height = `${newHeight}px`;
-        card.style.opacity = '1';
-        card.style.filter = 'none';
-      } else {
-        // Reset - altura normal
-        card.style.transform = 'translate(-50%, -50%)';
-        card.style.height = '400px';
-        card.style.opacity = '1';
-        card.style.filter = 'none';
-      }
+      // Initial and final heights
+      const maxHeight = 400;
+      const minHeight = 200;
+      
+      // Calculate current height
+      const currentHeight = maxHeight - (cardProgress * (maxHeight - minHeight));
+      
+      // Apply height
+      card.style.height = `${currentHeight}px`;
     });
   }
 
-  // Event listeners
-  window.addEventListener('scroll', handleStickyCardsAnimation);
-  window.addEventListener('load', handleStickyCardsAnimation);
+  // Add event listeners
+  window.addEventListener('scroll', handleCardsAnimation, { passive: true });
+  window.addEventListener('resize', handleCardsAnimation);
+  window.addEventListener('load', handleCardsAnimation);
 }

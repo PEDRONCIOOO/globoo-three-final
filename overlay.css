@@ -400,10 +400,69 @@ header ul li:hover {
 
 /* SECTION 3 - WRAPPER STICKY, CARDS COMPRIMINDO */
 .section-3 {
-  display: block;
-  padding: 0;
-  min-height: 400vh;
+  min-height: 100vh;
   position: relative;
+  overflow: hidden;
+}
+
+.section-3-container {
+  padding: 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.numbers-title {
+  flex: 0 0 40%;
+  padding-right: 2rem;
+}
+
+.card-wrapper {
+  flex: 0 0 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  height: 80vh;
+  overflow: hidden;
+  padding: 2rem 0;
+}
+
+.card {
+  width: 400px;
+  height: 400px; /* Altura inicial fixa */
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.5s ease;
+  will-change: transform, height;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card-title img {
+  width: 30px;
+  height: 30px;
+}
+
+.card-title h2 {
+  font-size: 1.8em;
+  color: white;
+  margin: 0;
+}
+
+.card p {
+  color: white;
+  font-size: 1.1em;
+  line-height: 1.6em;
+  margin: 0;
 }
 
 .numbers-title {
@@ -436,25 +495,28 @@ header ul li:hover {
 }
 
 .card-wrapper {
-  position: sticky;
-  top: 20vh;
-  z-index: 5;
-  height: 60vh;
+  /* position: sticky; */ /* REMOVED */
+  /* top: 20vh; */ /* REMOVED */
+  z-index: 5; /* Below numbers-title if they overlap */
+  /* height: 60vh; */ /* REMOVED - height auto */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding-top: 100vh;
+  gap: 50px; /* Space between cards */
+  /* padding-top: 100vh; */ /* REMOVED */
+  padding: 20px 0; /* Padding for the wrapper */
+  margin-top: 5vh; /* Optional: if numbers-title isn't full width and needs visual separation */
+  position: relative; /* Ensure it's a positioning context if needed, though not strictly for flex */
 }
 
 .card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  /* position: absolute; */ /* REMOVED */
+  /* top: 50%; */ /* REMOVED */
+  /* left: 50%; */ /* REMOVED */
+  /* transform: translate(-50%, -50%); */ /* REMOVED */
   height: 400px;
-  width: 400px;
-  max-width: 90%;
+  width: 500px; /* Increased width */
+  max-width: 90%; /* For responsiveness on small screens */
   background: rgba(66, 144, 200, 0.1);
   border: 1px solid rgba(66, 144, 200, 0.3);
   border-radius: 20px;
@@ -462,9 +524,9 @@ header ul li:hover {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease-out; /* For smooth scaling by JS */
   opacity: 1;
-  scale: 1;
+  transform-origin: top center; /* Changed from center center */
 }
 
 .card-title {
@@ -486,18 +548,20 @@ header ul li:hover {
 }
 
 .card p {
-  color: white;
+  color: white; /* Was white, ensure it's from .section-3 p or specific */
   font-size: 1.1em;
-  line-height: 1.6em;
+  line-height: 1.6em; /* Was 1.6em */
   margin: 0;
+  font-family: 'Roboto Flex', sans-serif; /* Added for consistency if not inherited */
+  font-weight: 300; /* Added for consistency if not inherited */
 }
 
 /* Estados de animação para compressão */
-.card.compressed {
-  scale: 0.8;
-  opacity: 0.3;
-  filter: blur(2px);
-}
+/* .card.compressed { */ /* REMOVED - JS handles scaling directly */
+  /* scale: 0.8; */
+  /* opacity: 0.3; */
+  /* filter: blur(2px); */
+/* } */
 
 /* SECTION 4 */
 .section-4 {
@@ -2158,140 +2222,50 @@ footer {
     position: static;
     max-width: 100%;
     text-align: center;
-  }
-
-  .numbers-title h2 {
-    font-size: 2.5em;
+    height: auto; /* Adjust height for static positioning */
+    margin-bottom: 2rem; /* Add space below if static */
   }
 
   .card-wrapper {
     max-width: 100%;
-    padding-left: 0;
     width: 100%;
+    gap: 30px; /* Adjust gap for smaller screens */
+    margin-top: 0; /* Reset margin-top if numbers-title is static */
   }
 
   .card {
-    height: 280px;
+    height: 360px; /* Adjust height for smaller screens if needed */
+    width: 90%;   /* Make width responsive */
+    max-width: 480px; /* Max width for cards on smaller screens, based on new base width */
+    /* Styles like background-color from original media query can be kept if desired */
+    /* background-color: rgba(255, 255, 255, 0.7); */
+    /* padding: 10px 30px; */ /* Base padding is 40px, adjust if needed */
   }
 
-  .card.compressed {
-    height: 140px;
-  }
-
-  .section-2 .wrapper p {
-    padding: 0;
-    margin: 0;
-    font-size: 0.8em;
-  }
-
-  .card {
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 10px 30px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px) saturate(2) contrast(1.3);
-  }
-
-  .card h2 {
-    font-size: 4em;
-  }
-
-  .card p {
-    margin: 0;
-    padding: 20px 0;
-  }
-
-  .numbers-title {
-    width: 90%;
-    margin-top: 0;
-  }
-
-  footer {
-    flex-direction: column;
-    height: fit-content;
-    justify-content: center;
-    align-items: center;
-    padding: 2em;
-    margin-top: 6em;
-  }
-
-  .footer-left h3,
-  .footer-left p {
-    font-size: 2em;
-  }
-
-  .footer-right {
-    display: none;
-  }
-
-  .features-list {
-    grid-template-columns: 1fr;
-    gap: 15px;
-    padding: 20px 0;
-  }
-  
-  .feature-item {
-    padding: 20px 15px;
-    gap: 12px;
-  }
-  
-  .feature-icon {
-    width: 45px;
-    height: 45px;
-  }
-  
-  .feature-icon svg {
-    width: 22px;
-    height: 22px;
-  }
-  
-  .feature-content h3 {
-    font-size: 1.1em;
-  }
-  
-  .feature-content p {
-    font-size: 0.85em;
-  }
-
-  .hero-content-left {
-    max-width: 90%;
-  }
-  
-  .hero-content-left h1 {
-    font-size: 2.5em;
-  }
+  /* .card.compressed { */ /* REMOVED - JS handles scaling */
+    /* height: 140px; */
+  /* } */
 }
 
 @media only screen and (max-width: 768px) {
   .section-3 {
-    padding: 3rem 1rem;
-    gap: 2rem;
+    padding: 3rem 1rem; /* Keep responsive padding */
   }
 
-  .numbers-title h2 {
-    font-size: 2em;
-  }
-
-  .numbers-title p {
-    font-size: 1em;
+  .card-wrapper {
+    gap: 20px; /* Further reduce gap */
   }
 
   .card {
-    height: 250px;
-    padding: 2rem 1.5rem;
+    height: 320px; /* Further adjust height */
+    max-width: 420px; /* Further adjust max-width */
+    padding: 30px; /* Adjust padding */
   }
 
-  .card.compressed {
-    height: 120px;
-    padding: 1rem;
-  }
-
-  .card-title h2 {
-    font-size: 1.5em;
-  }
-
-  .card.compressed .card-title h2 {
-    font-size: 1.2em;
-  }
+  /* .card.compressed { */ /* REMOVED - JS handles scaling */
+    /* height: 120px; */
+    /* padding: 1rem; */
+  /* } */
 }
 
 /* SERVICES DROPDOWN MODAL - já existente, apenas adicionando estilo para página ativa */
@@ -2337,4 +2311,79 @@ footer {
 .service-card.active:hover {
   transform: translateY(-3px) scale(1.02);
   cursor: default;
+}
+
+/* SECTION 3 - INSIGHTS */
+.insight-title {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.insight-title h2 {
+  font-size: 4rem;
+  color: white;
+  font-weight: 200;
+  margin-bottom: 1.5rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.insight-title strong {
+  color: #4290c8;
+  font-weight: 600;
+  text-shadow: 0 0 30px rgba(66, 144, 200, 0.3);
+}
+
+.insight-title p {
+  font-size: 1.2rem;
+  color: #b8d4e3;
+  line-height: 1.6;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.insight-card {
+  background: rgba(66, 144, 200, 0.05);
+  border: 1px solid rgba(66, 144, 200, 0.2);
+  border-radius: 20px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transform: perspective(1000px);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.insight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%),
+    rgba(66, 144, 200, 0.15) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+  will-change: opacity;
+  pointer-events: none;
+}
+
+.card-icon {
+  /* ...existing code... */
+  will-change: transform;
+}
+
+.card-content {
+  /* ...existing code... */
+  will-change: transform;
 }
